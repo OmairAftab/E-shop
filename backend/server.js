@@ -1,4 +1,5 @@
 const app=require("./app")
+const connectDatabase = require("./db/Database")
 
 
 
@@ -28,6 +29,12 @@ process.on("unhandledRejection",(err)=>{
         process.exit(1);
     })
 })
+
+
+
+
+//connect db
+connectDatabase();
 
 
 
