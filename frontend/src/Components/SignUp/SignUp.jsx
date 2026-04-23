@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import {AiOutlineEyeInvisible,AiOutlineEye} from "react-icons/ai"
 import { Link } from 'react-router-dom'
 import {RxAvatar} from "react-icons/rx"
+import axios from 'axios'
+import { server } from '../../server'
 
 const SignUp = () => {
 
@@ -14,8 +16,27 @@ const SignUp = () => {
 
 
     const handleSubmit = (e) => {
-        console.log(name,email,password,avatar)
-    }
+
+        e.preventDefault()  // prevents the default form submission behavior, which would cause a page reload. We want to handle the submission with JavaScript instead.
+    
+    const newForm = new FormData(); // FormData lets you send files + text together
+    newForm.append("file", avatar)
+    newForm.append("name", name)
+    newForm.append("email", email)
+    newForm.append("password", password)
+
+    console.log("Submitting signup form", { name, email, password, avatar })
+
+    axios.post(`${server}/user/create-user`, newForm) // let browser set multipart boundary
+    .then((res) => {                                   // runs if request is successful
+        console.log(res.data)                          // logs the response from backend
+    })
+    .catch((error) => {                                // runs if request fails
+        console.log(error)                             // logs the error
+    })                                                
+}
+
+
 
 
     const handleFileInputChange=(e)=>{
@@ -42,7 +63,7 @@ const SignUp = () => {
                 <div className='bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10'>
 
 
-                    <form className='space-y-6' action='#' >
+                    <form className='space-y-6' action='#' onSubmit={handleSubmit} >
 
 
                         <div>
