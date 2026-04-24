@@ -4,7 +4,9 @@ const path = require("path")
 const { upload } = require("../multer")
 const User = require("../model/user")
 const ErrorHandler = require("../utils/ErrorHandler")
-
+const { JsonWebTokenError } = require("jsonwebtoken")
+const jwt =require("jsonwebtoken")
+const sendMail=require('../utils/sendMail')
 
 router.post("/create-user", upload.single("file"), async (req, res, next) => {
   try {
@@ -33,9 +35,31 @@ router.post("/create-user", upload.single("file"), async (req, res, next) => {
       },
     }
 
-    const createdUser = await User.create(newuser)
+    const activationToken= createActivationToken(newuser);
 
-    console.log(createdUser)
+    const activationURL=`https://localhost:3000/activation/${activationToken}`
+
+
+    try{
+      await sendMail({
+        email:newuser.email,
+        subject: "Activate your Account",
+        message: `hello ${newuser.name}, please click on link to activate the account:  ${activationURL} `
+        
+      })
+
+      res.status(201).json({success:true, message:`Please check your email ${newuser.email} to verify your account`})
+    }
+    catch(err){
+      return next(new ErrorHandler(err.message),500)
+    }
+
+
+
+
+    // const createdUser = await User.create(newuser)
+
+    // console.log(createdUser)
 
     return res.status(201).json({
       success: true,
@@ -45,6 +69,18 @@ router.post("/create-user", upload.single("file"), async (req, res, next) => {
     next(err)
   }
 })
+
+
+
+//create activationtoken function
+const createActivationToken=(user)=>{
+  return jwt.sign(user, process.env.ACTIVATION_SECRET,{
+    expiresIn: "5m",
+  })
+}
+
+
+//activate user
 
 
 module.exports = router
