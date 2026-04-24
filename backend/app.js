@@ -11,7 +11,7 @@ app.use(express.json());                               // parses incoming JSON r
 app.use(cookieParser());                               // parses cookies from request headers
 app.use(bodyParser.urlencoded({ extended: true }));    // parses form data (URL-encoded bodies)
 
-app.use("/",express.static("uploads"))              //It serves the files inside your uploads folder as publicly accessible URLs.
+app.use("/uploads", express.static("uploads"))              // Serve uploaded files from /uploads instead of root
 
 
 //config
@@ -24,7 +24,6 @@ if (process.env.NODE_ENV !== "PRODUCTION") {          // only runs in developmen
 
 // import routes
 const user=require("./controller/user.js")
-
 // mount routes
 app.use("/user", user)
 

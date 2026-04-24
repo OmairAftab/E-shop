@@ -3,6 +3,13 @@ const connectDatabase = require("./db/Database")
 
 
 
+
+app.use('/',(req,res)=>{
+    res.send("Home page")
+})
+
+
+
 //handling uncaught exceptions
 process.on('uncaughtException',(err)=>{
     console.log(`Error ${err.message}`)

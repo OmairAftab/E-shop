@@ -4,8 +4,12 @@ import { Link } from 'react-router-dom'
 import {RxAvatar} from "react-icons/rx"
 import axios from 'axios'
 import { server } from '../../server'
+import { useNavigate} from 'react-router-dom'
+
 
 const SignUp = () => {
+
+     const navigate = useNavigate()
 
     const[name,setName]=useState('')
     const[email,setEmail]=useState('')
@@ -16,6 +20,8 @@ const SignUp = () => {
 
 
     const handleSubmit = (e) => {
+
+        
 
         e.preventDefault()  // prevents the default form submission behavior, which would cause a page reload. We want to handle the submission with JavaScript instead.
     
@@ -29,7 +35,8 @@ const SignUp = () => {
 
     axios.post(`${server}/user/create-user`, newForm) // let browser set multipart boundary
     .then((res) => {                                   // runs if request is successful
-        console.log(res.data)                          // logs the response from backend
+        console.log(res.data) 
+        navigate("/")                             // logs the response from backend
     })
     .catch((error) => {                                // runs if request fails
         console.log(error)                             // logs the error
