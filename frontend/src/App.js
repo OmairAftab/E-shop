@@ -6,10 +6,13 @@ import HomePage from "./Pages/Home.jsx"
 import NotFound from "./Pages/NotFound.jsx"
 
 import "./App.css"
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 const App = () => {
   return (
     <BrowserRouter>
+    <ToastContainer position="top-right" />
     <Routes>
       <Route path='/' element={<HomePage />} />
       <Route path='/login' element={<LoginPage />} />

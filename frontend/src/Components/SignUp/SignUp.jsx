@@ -5,6 +5,7 @@ import {RxAvatar} from "react-icons/rx"
 import axios from 'axios'
 import { server } from '../../server'
 import { useNavigate} from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 
 const SignUp = () => {
@@ -36,10 +37,20 @@ const SignUp = () => {
     axios.post(`${server}/user/create-user`, newForm) // let browser set multipart boundary
     .then((res) => {                                   // runs if request is successful
         console.log(res.data) 
-        navigate("/")                             // logs the response from backend
+        navigate("/login")                             // logs the response from backend
+
+        toast.success("Registration successful!.")
+    
+        
+        //after successful registration empty the firlds:
+        setName('')
+        setEmail('')
+        setPassword('')
+        setAvatar(null)
     })
     .catch((error) => {                                // runs if request fails
         console.log(error)                             // logs the error
+        toast.error("Registration failed. Please try again.")
     })                                                
 }
 

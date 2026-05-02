@@ -1,12 +1,32 @@
+import axios from 'axios'
 import React, { useState } from 'react'
 import {AiOutlineEyeInvisible,AiOutlineEye} from "react-icons/ai"
 import { Link } from 'react-router-dom'
+import { useNavigate} from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 const Login = () => {
 
+    const server = "http://localhost:8000"
     const[email,setEmail]=useState('')
     const[password,setPassword]=useState('')
     const[visible,setVisible]=useState(false)
+    const navigate=useNavigate();
+
+
+    const handleSubmit = async (e) => {
+        e.preventDefault()  // prevents the default form submission behavior, which would cause a page reload. We want to handle the submission with JavaScript instead.`
+  
+        await axios.post(`${server}/user/login-user`, { email, password }).then((res) => {
+
+            toast.success("Login successful!.")
+            navigate("/");
+
+        }).catch((error) => {
+            console.log(error)                             // logs the error
+            toast.error("Login failed. Please try again.")
+        })
+    }
 
     return (
         <div className='min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8'>
@@ -25,7 +45,7 @@ const Login = () => {
                 <div className='bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10'>
 
 
-                    <form className='space-y-6' action='#' >
+                    <form onSubmit={handleSubmit} className='space-y-6' action='#' >
                         
                         
                         

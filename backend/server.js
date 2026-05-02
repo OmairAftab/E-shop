@@ -9,7 +9,6 @@ app.use('/',(req,res)=>{
 })
 
 
-
 //handling uncaught exceptions
 process.on('uncaughtException',(err)=>{
     console.log(`Error ${err.message}`)
