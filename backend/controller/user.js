@@ -123,6 +123,7 @@ router.post("/login-user", catchAsyncErrors(async(req,res,next)=>{
 
 
   //if everything valid
+  // if everything valid, send token using helper (handles cookie + response)
   sendToken(checkUser, 200, res)
 
 }))
@@ -140,6 +141,22 @@ router.post("/login-user", catchAsyncErrors(async(req,res,next)=>{
 
 
 
+//LOAD USER
+router.get("/getuser" , isAuthenticated, catchAsyncErrors(async(req,res,next)=>{
+  try{
+
+    const user=await User.findById(req.user.id);
+
+    if(!user){
+      return next(new ErrorHandler("User doesn't exist",400));
+    }
+
+    res.status(200).json({success:true, user})
+  }
+  catch(err){
+    return res.json(err.message)
+  }
+}))
 
 
 

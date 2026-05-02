@@ -6,7 +6,10 @@ const cors = require("cors")
 
 const app=express();
 
-app.use(cors())
+app.use(cors({
+    origin:"http://localhost:3000",
+    credentials:true
+}))
 app.use(express.json());                               // parses incoming JSON request bodies
 app.use(cookieParser());                               // parses cookies from request headers
 app.use(bodyParser.urlencoded({ extended: true }));    // parses form data (URL-encoded bodies)

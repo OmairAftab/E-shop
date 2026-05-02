@@ -17,7 +17,7 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault()  // prevents the default form submission behavior, which would cause a page reload. We want to handle the submission with JavaScript instead.`
   
-        await axios.post(`${server}/user/login-user`, { email, password }).then((res) => {
+        await axios.post(`${server}/user/login-user`, { email, password },{withCredentials:true}).then((res) => {
 
             toast.success("Login successful!.")
             navigate("/");

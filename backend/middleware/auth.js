@@ -1,20 +1,26 @@
-const ErrorHandler=require ("../utils/ErrorHandler")
-const jwt=require("jsonwebtoken");
-const catchAsyncErrors =require ("./catchAsyncErrors")
-const User=require("../model/user")
+const jwt = require("jsonwebtoken");
 
+// Middleware to extract user id from JWT in cookie and attach to req.user
+const isAuthenticated = async (req, res, next) => {
+  const { token } = req.cookies || {};
 
-exports.isAuthenticated= catchAsyncErrors(async(req,res,next)=>{
+  if (!token) {
+    return res.status(401).json({ success: false, message: "Not Authorized. Login again" });
+  }
 
-    const {token} =req.cookies;
+  try {
+    const decodedtoken = jwt.verify(token, process.env.JWT_SECRET_KEY);
 
-    if(!token){
-        return next(new ErrorHandler("Please login to continue",401))
+    if (decodedtoken && decodedtoken.id) {
+      req.user = { id: decodedtoken.id };
+      return next();
+    } else {
+      return res.status(401).json({ success: false, message: "Not Authorized. Login again" });
     }
+  } catch (err) {
+    console.error("Auth Middleware Error:", err);
+    return res.status(401).json({ success: false, error: "Invalid or expired token", details: err.message });
+  }
+};
 
-    const decoded= jwt.verify(token, process.env.JWT_SECRET_KEY)
-
-    req.user=await User.findById(decoded.id);
-
-    next();
-})
+module.exports = { isAuthenticated };
