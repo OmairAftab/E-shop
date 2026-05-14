@@ -4,10 +4,11 @@ import {AiOutlineEyeInvisible,AiOutlineEye} from "react-icons/ai"
 import { Link } from 'react-router-dom'
 import { useNavigate} from 'react-router-dom'
 import { toast } from 'react-toastify'
+import { server } from '../../server'
 
 const Login = () => {
 
-    const server = "http://localhost:8000"
+    // const server = "http://localhost:8000"
     const[email,setEmail]=useState('')
     const[password,setPassword]=useState('')
     const[visible,setVisible]=useState(false)
