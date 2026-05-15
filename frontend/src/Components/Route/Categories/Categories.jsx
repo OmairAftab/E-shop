@@ -26,9 +26,44 @@ const Categories = () => {
         </div>
       </div>
 
-      
-    </>
-  )
-}
 
-export default Categories
+
+
+  {/* Categories Grid */}
+      <div
+        className={`${styles.section} bg-white p-6 rounded-xl mb-12 shadow-md`}
+        id="categories"
+      >
+        <h2 className="text-2xl font-bold text-blue-700 mb-6 text-center">
+          Shop by Categories
+        </h2>
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
+          {categoriesData &&
+            categoriesData.map((i) => {
+              const handleSubmit = () => {
+                navigate(`/products?category=${i.title}`);
+              };
+              return (
+                <div
+                  key={i.id}
+                  onClick={handleSubmit}
+                  className="w-full h-[140px] flex flex-col items-center justify-center cursor-pointer bg-white rounded-lg shadow hover:shadow-lg transition border border-gray-100 hover:border-blue-500 group"
+                >
+                  <img
+                    src={i.image_Url}
+                    className="w-[90px] h-[70px] object-contain mb-3 group-hover:scale-105 transition"
+                    alt={i.title}
+                  />
+                  <h5 className="text-base font-medium text-gray-800 group-hover:text-blue-600">
+                    {i.title}
+                  </h5>
+                </div>
+              );
+            })}
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default Categories;
