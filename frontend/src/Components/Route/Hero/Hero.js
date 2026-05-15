@@ -1,6 +1,7 @@
 import React from "react";
 import Lottie from "lottie-react";
 import heroAnimation from "../../../Assets/hero.json";
+import { Link } from "react-router-dom";
 
 const Hero = () => {
   return (
@@ -10,14 +11,16 @@ const Hero = () => {
         {/* Left Side - Text Content */}
         <div className="w-full md:w-[45%] z-10 space-y-6">
           <h1 className="text-[38px] md:text-[60px] font-bold leading-tight text-gray-900">
-            Pak <span className="text-gradient bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-blue-900">Multivendor</span> Store
+            Pak <span className="text-gradient bg-clip-text text-transparent bg-gradient-to-r text-blue-800">Multivendor</span> Store
           </h1>
           <p className="text-lg text-gray-600 leading-relaxed">
             Your ultimate shopping destination, powered by the best vendors around. Browse, compare, and buy with confidence  because great products and great sellers belong together.
           </p>
 
           <button className="px-8 py-3 bg-gradient-to-r from-blue-500 to-blue-900 text-white rounded-lg shadow-md hover:from-purple-600 hover:to-pink-500 transition duration-300 ease-in-out font-medium text-lg">
+            <Link to="/products">
             Shop Now
+            </Link>
           </button>
         </div>
 
