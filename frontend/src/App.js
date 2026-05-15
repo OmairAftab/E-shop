@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { BrowserRouter,Route,Routes } from 'react-router-dom'
 import {LoginPage} from "./Routes.js"
 import {SignUpPage} from "./Routes.js"
-import HomePage from "./Pages/Home.jsx"
+import HomePage from "./Pages/HomePage.jsx"
 import NotFound from "./Pages/NotFound.jsx"
 import { server } from './server.js'
 import axios from 'axios'
@@ -16,12 +16,6 @@ import { loadUser } from './redux/actions/user.js'
 const App = () => {
 
   useEffect(()=>{
-    // axios.get(`${server}/user/getuser`,{withCredentials:true}).then((res)=>{
-    //   toast.success(res.data?.message || "Welcome")
-    // }).catch((err)=>{
-    //   const msg = err?.response?.data?.message || err?.message || "Something went wrong"
-    //   toast.error(msg)
-    // })
 
     Store.dispatch(loadUser())
 
