@@ -3,11 +3,16 @@ import styles from "../../Styles/styles";
 import { categoriesData, productData } from "../../Static/data";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { AiOutlineSearch } from "react-icons/ai";
+import {
+  AiOutlineHeart,
+  AiOutlineSearch,
+  AiOutlineShoppingCart,
+} from "react-icons/ai";
 import { IoIosArrowDown, IoIosArrowForward } from "react-icons/io";
 import { BiMenuAltLeft } from "react-icons/bi";
 import DropDown from "./DropDown";
 import Navbar from "./Navbar";
+import { CgProfile } from "react-icons/cg";
 
 
 const Header = ({ activeHeading }) => {
@@ -71,7 +76,6 @@ const Header = ({ activeHeading }) => {
 
   return (
     <>
-    {/* Fixed blue navbar (visible on >=800px) placed outside the content wrapper so it spans full width */}
     
 
     <div className="flex w-11/12 mx-auto justify-around">
@@ -200,9 +204,65 @@ const Header = ({ activeHeading }) => {
 
 
 
-        </div>
-      </div>
-    </div>
+
+
+
+
+          {/* blue navbar k right most pe jo 3 hain icons */}
+            <div className="flex"> {/* search icon with badge */}
+            <div className={`${styles.noramlFlex}`}> {/* heart icon with badge */}
+              <div
+                className="relative cursor-pointer mr-[15px]"
+                
+              >
+                <AiOutlineHeart size={30} color="rgb(255 255 255 / 83%)" />
+                <span className="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 top right p-0 m-0 text-white font-mono text-[12px] leading-tight text-center">
+                  0
+                </span>
+              </div>
+            </div> {/* closes the heart icon div */}
+
+
+
+
+              {/* search icon */}
+            <div className={`${styles.noramlFlex}`}>
+              <div
+                className="relative cursor-pointer mr-[15px]"
+              >
+                <AiOutlineShoppingCart
+                  size={30}
+                  color="rgb(255 255 255 / 83%)"
+                />
+                <span className="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 top right p-0 m-0 text-white font-mono text-[12px] leading-tight text-center">
+                  1
+                </span>
+              </div>
+            </div> {/* closes the cart icon div */}
+
+
+
+
+
+              {/* profile icon */}
+            <div className={`${styles.noramlFlex}`}>
+              <div className="relative cursor-pointer mr-[15px]">
+                
+                  <Link to="/login">
+                    <CgProfile size={30} color="rgb(255 255 255 / 83%)" />
+                  </Link>
+                
+              </div>
+            </div>  {/* closes the icons div */}
+
+        </div> {/* closes the styles.section div with class flex which contain these 3 icons at right end (heart,shopping and profile) */}
+
+
+
+
+       </div>   {/* closes styles.section */}
+      </div>     {/* closes flex items-center bg-[#3321c8] */}
+    </div>       {/* ✅ closes the sticky active div — this was missing */}
       
 </>
 
