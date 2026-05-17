@@ -10,8 +10,8 @@ const Hero = () => {
         
         {/* Left Side - Text Content */}
         <div className="w-full md:w-[45%] z-10 space-y-6">
-          <h1 className="text-[38px] md:text-[60px] font-bold leading-tight text-gray-900">
-            Pak <span className="text-gradient bg-clip-text text-transparent bg-gradient-to-r text-blue-800">Multivendor</span> Store
+          <h1 className="text-[38px] md:text-[60px] font-bold leading-tight text-blue-800">
+            Pak MultiVendor Store
           </h1>
           <p className="text-lg text-gray-600 leading-relaxed">
             Your ultimate shopping destination, powered by the best vendors around. Browse, compare, and buy with confidence  because great products and great sellers belong together.
