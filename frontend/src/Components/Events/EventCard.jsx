@@ -1,5 +1,8 @@
 import React from 'react'
 import styles from '../../Styles/styles'
+import CountDown from './CountDown'
+
+
 
 const EventCard = () => {
   return (
@@ -29,12 +32,15 @@ const EventCard = () => {
           </span>
         </div>
 
+        <CountDown />
+
 
 
 
 
 {/* CURRENTLY DOING PART 1 OF MULTIVENDOR AND ITS NOT REQUIRED TO MAKE IT RESPONSIVE MEAN CURRENTLY USING STATIC DAT.. */}
 {/* WILL UN-COMMENT THIS AFTER AND REMOVE ABOVE PART WHICH IS STATIC */}
+{/* YE JO NEECHE LIKHA A YE ABOVE ABOVE OF COUNTDOWN COMPONENT HAI */}
 
       {/* <div className="w-full lg:-w[50%] m-auto">
         <img src={`${data.images[0]?.url}`} alt="" />
