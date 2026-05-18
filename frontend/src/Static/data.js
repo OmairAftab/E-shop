@@ -275,7 +275,7 @@ export const navItems = [
         name: "Apple inc.",
         shop_avatar: {
           public_id: "test",
-          url: "https://www.hatchwise.com/wp-content/uploads/2022/05/amazon-logo-1024x683.png",
+          url: "https://images.stockcake.com/public/1/c/5/1c5f326a-d867-4ac6-ba64-47b3edb9f752_large/illuminated-apple-logo-stockcake.jpg",
         },
         ratings: 4.2,
       },
@@ -335,7 +335,7 @@ export const navItems = [
         name: "Apple inc.",
         shop_avatar: {
           public_id: "test",
-          url: "https://www.hatchwise.com/wp-content/uploads/2022/05/amazon-logo-1024x683.png",
+          url: "https://images.stockcake.com/public/1/c/5/1c5f326a-d867-4ac6-ba64-47b3edb9f752_large/illuminated-apple-logo-stockcake.jpg",
         },
         ratings: 4.2,
       },
@@ -366,7 +366,7 @@ export const navItems = [
         name: "Shahriar Watch House",
         shop_avatar: {
           public_id: "test",
-          url: "https://www.hatchwise.com/wp-content/uploads/2022/05/amazon-logo-1024x683.png",
+          url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT8TtSQvQ178TAORCs0b0sXg20BzqEr2j9SvA&s",
         },
         ratings: 4.2,
       category:"Others"
@@ -397,7 +397,7 @@ export const navItems = [
         name: "Alisha Shoes Mart",
         shop_avatar: {
           public_id: "test",
-          url: "https://www.hatchwise.com/wp-content/uploads/2022/05/amazon-logo-1024x683.png",
+          url: "https://thumbs.dreamstime.com/b/vector-speeding-running-shoe-symbol-icon-logo-sport-wings-illustration-50683533.jpg",
         },
         ratings: 4.2,
       },

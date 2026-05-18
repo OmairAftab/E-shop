@@ -9,6 +9,7 @@ import {
   AiOutlineShoppingCart,
   AiOutlineStar,
 } from "react-icons/ai";
+import ProductDetailsCard from '../ProductDetailsCard/ProductDetailsCard';
 
 
 // THE DATA WHICH WE ARE DEALING WITH IN THIS 
@@ -148,7 +149,7 @@ const ProductCard = ({ data }) => {
               <AiOutlineEye
             size={22}
             className="cursor-pointer absolute right-2 top-14"
-            onClick={() => setOpen(!open)}
+            onClick={() => setOpen(!open)} // isse hum open state ko toggle kar rahe hain jab bhi user eye icon pe click karega to open state true ya false ho jayega
             color="#333"
             title="Quick view"
           />
@@ -160,8 +161,9 @@ const ProductCard = ({ data }) => {
           />
 
 
-
-
+            {/* agar open true hoga (tb hoga jb hum eye walee icon pe click kren ge)  to productDetailsCard  dikha do */}
+            
+            {open ? <ProductDetailsCard setOpen={setOpen} data={data} /> : null}   {/* setOpen is passed as a prop to ProductDetailsCard so that the child component can close itself.  we r also passing data as a prop so it can use it*/}
 
 
 
