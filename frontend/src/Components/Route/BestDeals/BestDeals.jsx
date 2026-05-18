@@ -22,7 +22,7 @@ const BestDeals = () => {
   return (
     <div className={`${styles.section}`}>
         <div className={`${styles.heading}`}>
-            <h1>Best Deals</h1>
+            <h1 className='text-center'>Best Deals</h1>
         </div>
 
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
