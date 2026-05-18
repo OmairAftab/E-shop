@@ -1,4 +1,5 @@
 // navigation Data
+
 export const navItems = [
     {
       title: "Home",
@@ -263,7 +264,7 @@ export const navItems = [
       image_Url: [
         {
           public_id: "test",
-          url: "https://www.istorebangladesh.com/images/thumbs/0000286_macbook-pro-m1_550.png",
+          url: "https://tech4u.pk/wp-content/uploads/2023/02/macbook-pro-13-inch-space-gray.jpg",
         },
         {
           public_id: "test",
@@ -323,7 +324,7 @@ export const navItems = [
       image_Url: [
         {
           public_id: "test",
-          url: "https://www.istorebangladesh.com/images/thumbs/0000286_macbook-pro-m1_550.png",
+          url: "https://wise-tech.com.pk/wp-content/uploads/2024/01/Apple-MacBook-Pro-Space-Grey-Front.png",
         },
         {
           public_id: "test",
@@ -385,7 +386,7 @@ export const navItems = [
       image_Url: [
         {
           public_id: "test",
-          url: "https://mirzacdns3.s3.ap-south-1.amazonaws.com/cache/catalog/RLV0015/2-800x800.jpg",
+          url: "https://img.magnific.com/free-photo/fashion-shoes-sneakers_1203-7529.jpg",
         },
         {
           public_id: "test",
