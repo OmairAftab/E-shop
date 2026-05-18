@@ -130,6 +130,7 @@ const ProductDetailsCard = ({setOpen, data}) => {
                         {click ? (
                         <AiFillHeart
                             size={30}
+                            onClick={()=> setClick(!click)}
                             className="cursor-pointer"
                             color={click ? "red" : "#333"}
                             title="Remove from wishlist"
@@ -137,6 +138,7 @@ const ProductDetailsCard = ({setOpen, data}) => {
                         ) : (
                         <AiOutlineHeart
                             size={30}
+                            onClick={()=> setClick(!click)}
                             className="cursor-pointer"
                             title="Add to wishlist"
                         />
