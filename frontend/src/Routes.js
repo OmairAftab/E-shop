@@ -4,6 +4,7 @@ import HomePage from './Pages/Home.jsx';
 import ProductsPage from './Pages/ProductsPage.jsx';
 import BestSellingPage from './Pages/BestSellingPage.jsx';
 import EventsPage from './Pages/EventsPage.jsx';
+import FAQpage from './Pages/FAQpage.jsx';
 
 export{
     LoginPage,
@@ -12,6 +13,7 @@ export{
     ProductsPage,
     BestSellingPage,
     EventsPage,
+    FAQpage,
 };
 
 
