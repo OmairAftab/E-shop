@@ -12,6 +12,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import { toast } from 'react-toastify'
 import Store from "./redux/store.js"
 import { loadUser } from './redux/actions/user.js'
+import ProductsPage from './Pages/ProductsPage.jsx'
 
 const App = () => {
 
@@ -30,6 +31,7 @@ const App = () => {
       <Route path='/login' element={<LoginPage />} />
       <Route path='/sign-up' element={<SignUpPage />} />
       <Route path='*' element={<NotFound />} />
+      <Route path="/products" element={<ProductsPage/>} />
 
     </Routes>
     </BrowserRouter>
