@@ -2,12 +2,14 @@ import LoginPage from '../src/Pages/Login.jsx'
 import SignUpPage from '../src/Pages/SignUp.jsx'
 import HomePage from './Pages/Home.jsx';
 import ProductsPage from './Pages/ProductsPage.jsx';
+import BestSellingPage from './Pages/BestSellingPage.jsx';
 
 export{
     LoginPage,
     SignUpPage,
     HomePage,
     ProductsPage,
+    BestSellingPage,
 };
 
 
