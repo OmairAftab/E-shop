@@ -4,10 +4,10 @@ import CountDown from './CountDown'
 
 
 
-const EventCard = () => {
+const EventCard = ({active}) => {
   return (
     <div
-      className={`w-full block bg-white rounded-lg lg:flex p-2`}
+      className={`w-full block bg-white rounded-lg lg:flex p-2   ${active ? "unset" : "mb-12"}`}
     >
 
         <div className="w-full lg:-w[50%] m-auto">
