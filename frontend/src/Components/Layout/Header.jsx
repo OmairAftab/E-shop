@@ -13,9 +13,13 @@ import { BiMenuAltLeft } from "react-icons/bi";
 import DropDown from "./DropDown";
 import Navbar from "./Navbar";
 import { CgProfile } from "react-icons/cg";
+import { backend_url } from "../../server";
 
 
 const Header = ({ activeHeading }) => {
+  const { isAuthenticated, user, loading } = useSelector((state) => state.user);
+  
+
 
   const [searchTerm, setSearchTerm] = useState("");
   const [searchData, setSearchData] = useState([]);
@@ -74,8 +78,23 @@ const Header = ({ activeHeading }) => {
 
 
 
+
+// this function is used to get the profile image to show in header which user used while making their account
+  const avatarSrc = useMemo(() => {
+    const url = user?.avatar?.url;
+    if (!url) return "/logo192.png";
+    if (url.startsWith("http") || url.startsWith("data:")) return url;
+    return `${backend_url}${url.startsWith("/") ? url.slice(1) : url}`;
+  }, [user]);
+
+
+
   return (
-    <>
+   <>
+   {
+    loading ? null :(
+      
+       <>
     
 
     <div className="flex w-11/12 mx-auto justify-around">
@@ -247,13 +266,28 @@ const Header = ({ activeHeading }) => {
               {/* profile icon */}
             <div className={`${styles.noramlFlex}`}>
               <div className="relative cursor-pointer mr-[15px]">
-                
+                {isAuthenticated ? (
+                  <Link to="/profile">
+                    <img
+                      src={avatarSrc}
+                      onError={(e) => {
+                        e.currentTarget.onerror = null;
+                        e.currentTarget.src = "/logo192.png";
+                      }}
+                      className="w-[35px] h-[35px] rounded-full"
+                      alt="user avatar"
+                    />
+                  </Link>
+                ) : (                  //agar logged in nhi hoga to aik default image lga den ge
                   <Link to="/login">
                     <CgProfile size={30} color="rgb(255 255 255 / 83%)" />
                   </Link>
-                
+                )}
               </div>
-            </div>  {/* closes the icons div */}
+            </div>
+
+
+
 
         </div> {/* closes the styles.section div with class flex which contain these 3 icons at right end (heart,shopping and profile) */}
 
@@ -265,6 +299,11 @@ const Header = ({ activeHeading }) => {
     </div>       {/* ✅ closes the sticky active div — this was missing */}
       
 </>
+    )
+   }
+   </>
+   
+  
 
    
   )
