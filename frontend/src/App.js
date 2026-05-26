@@ -14,6 +14,7 @@ import Store from "./redux/store.js"
 import { loadUser } from './redux/actions/user.js'
 import ProductsPage from './Pages/ProductsPage.jsx'
 import { useSelector } from 'react-redux'
+import ProfilePage from './Pages/ProfilePage.jsx'
 
 
 const App = () => {
@@ -45,6 +46,8 @@ const App = () => {
       <Route path="/events" element={<EventsPage/>} />
       <Route path="/faq" element={<FAQpage/>} />
       <Route path='/product/:name' element={<ProductsDetailPage/>} />
+      <Route path='/profile' element={<ProfilePage/>} />
+
       
 
     </Routes>
