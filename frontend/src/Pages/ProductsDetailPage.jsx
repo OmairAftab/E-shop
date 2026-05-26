@@ -6,6 +6,7 @@ import { useParams } from 'react-router-dom'
 import { useState } from 'react'
 import { useEffect } from 'react'
 import { productData } from '../Static/data'
+import SuggestedProducts from '../Components/Products/SuggestedProducts'
 
 // in the product detail page we got the name of product from parameter
 //  , find that product name in our db of that product then set it to data.. 
@@ -28,6 +29,9 @@ const ProductsDetailPage = () => {
     <div>
       <Header />
       <ProductDetail data={data} />
+      {
+        data && <SuggestedProducts data={data} />
+      }
       <Footer/>
     </div>
   )
