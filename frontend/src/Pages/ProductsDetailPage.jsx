@@ -7,6 +7,10 @@ import { useState } from 'react'
 import { useEffect } from 'react'
 import { productData } from '../Static/data'
 
+// in the product detail page we got the name of product from parameter
+//  , find that product name in our db of that product then set it to data.. 
+// then send that data to ProductDetail coponent and just style and show it there
+
 const ProductsDetailPage = () => {
 
     const {name} = useParams();
