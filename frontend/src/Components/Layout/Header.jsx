@@ -14,6 +14,8 @@ import DropDown from "./DropDown";
 import Navbar from "./Navbar";
 import { CgProfile } from "react-icons/cg";
 import { backend_url } from "../../server";
+import Cart from '../Cart/Cart';
+import RxCross1 from 'react-icons/rx';
 
 
 const Header = ({ activeHeading }) => {
@@ -25,6 +27,9 @@ const Header = ({ activeHeading }) => {
   const [searchData, setSearchData] = useState([]);
   const [active, setActive] = useState(false);
   const [dropDown, setDropDown] = useState(false);
+  const [openCart,setOpenCart] = useState(false);
+  const [openWishlist,setOpenWishlist] = useState(false);
+
   // const { allProducts } = useSelector((state) => state.products);
 
   const handleSearchChange = (e) => {
@@ -244,10 +249,11 @@ const Header = ({ activeHeading }) => {
 
 
 
-              {/* search icon */}
+              {/* cart icon */}
             <div className={`${styles.noramlFlex}`}>
               <div
                 className="relative cursor-pointer mr-[15px]"
+                onClick={() => setOpenCart(true)}              //cart icon pe click karne se openCart true ho jayega aur cart popup open ho jayega
               >
                 <AiOutlineShoppingCart
                   size={30}
@@ -285,6 +291,19 @@ const Header = ({ activeHeading }) => {
                 )}
               </div>
             </div>
+
+
+
+
+
+            {/* Cart popup */}
+            {
+              openCart ? (
+                <Cart setOpenCart={setOpenCart} />
+              ) : null
+            }
+
+
 
 
 

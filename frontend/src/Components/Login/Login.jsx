@@ -22,7 +22,7 @@ const Login = () => {
 
             toast.success("Login successful!.")
             navigate("/");
-            window.location.reload()  // reloads the page to update the UI with the new authentication state. This is necessary because after logging in, we want to show user-specific content, and reloading ensures that all components reflect the logged-in state.
+            window.location.reload(true)  // reloads the page to update the UI with the new authentication state. This is necessary because after logging in, we want to show user-specific content, and reloading ensures that all components reflect the logged-in state.
 
         }).catch((error) => {
             console.log(error)                             // logs the error
