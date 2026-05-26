@@ -151,7 +151,7 @@ const ProductDetail = ({ data }) => {
                   </div>
 
 
-                  
+
                   </div>  {/* closes shop info */}
 
                 </div>  {/*  closes right side */}
@@ -159,10 +159,156 @@ const ProductDetail = ({ data }) => {
               </div>  {/*  closes block w-full 800px:flex */}
             </div>  {/*  closes w-full py-5 */}
           </div>  {/*  closes styles.section */}
+
+        
+            
+            <ProductDetailInfo data={data} />        {/*Component is made below.. its for Silver color section which has 3 parts.. */}
+
         </>
       ) : null}
     </div>
   )
+}
+
+
+const ProductDetailInfo= ({data})=>{
+    const [active, setActive] = useState(1);
+
+    return (
+
+        <div className="bg-[#f5f6fb] px-3 800px:px-10 py-8 rounded">
+            <div className="w-full flex justify-between border-b pt-10 pb-2">
+
+                {/* DIV FOR PRODUCT DETAILS TAB */}
+                <div className="relative">
+
+                    <h5
+                        className={
+                        "text-[#000] text-[18px] px-1 leading-5 font-[600] cursor-pointer 800px:text-[20px]"
+                        }
+                        onClick={() => setActive(1)}
+                    >
+                        Product Details
+                    </h5>
+
+
+                     {active === 1 ? (
+                        <div className={`${styles.active_indicator}`} />   // ye neeche wali line hai jo active tab ke neeche aayegi
+                    ) : null}
+
+                </div> 
+                {/* END OF DIV FOR PRODUCT DETAILS TAB */}
+
+
+
+
+                {/* DIV FOR PRODUCT REVIEWS TAB */}
+                <div className="relative">
+                    <h5
+                        className={
+                        "text-[#000] text-[18px] px-1 leading-5 font-[600] cursor-pointer 800px:text-[20px]"
+                        }
+                        onClick={() => setActive(2)}
+                    >
+                        Product Reviews
+                    </h5>
+                    {active === 2 ? (
+                        <div className={`${styles.active_indicator}`} />
+                    ) : null}
+                </div>
+                {/* END OF DIV FOR PRODUCT REVIEWS TAB */}
+
+
+
+
+
+
+                {/* DIV FOR SELLER INFORMATION TAB */}
+                <div className="relative">
+                    <h5
+                        className={
+                        "text-[#000] text-[18px] px-1 leading-5 font-[600] cursor-pointer 800px:text-[20px]"
+                        }
+                        onClick={() => setActive(3)}
+                    >
+                        Seller Information
+                    </h5>
+                    {active === 3 ? (
+                        <div className={`${styles.active_indicator}`} />
+                    ) : null}
+                </div>
+                {/* END OF DIV FOR SELLER INFORMATION TAB */}
+
+
+
+            </div>
+
+
+
+
+            {/* PRODUCT DETAIL TAB MAIN JO PRODUCT HAI US KI INFORMATION DAAL DI BY data.description */}
+            {active === 1 ? (
+                    <>
+                    <p className="py-2 text-[18px] leading-8 pb-10 whitespace-pre-line">
+                        {data.description}
+                    </p>
+                    </>
+            ) : null}
+
+
+
+
+            {/* PRODUCT REVIEWS TAB */}
+            {
+                active === 2 ? (
+                    <div className="w-full py-8 flex items-center justify-center">
+                        <h5 className="text-[18px]">No reviews yet!</h5>
+                    </div>
+                ) : null
+            }
+
+
+
+
+            {/* SELLER INFORMATION TAB */}
+            {   active === 3 ? (
+                    <div className="w-full block 800px:flex items-start px-2 py-5 gap-6">
+
+                    {/* left side — shop info */}
+                    <div className="flex-shrink-0">
+                        <div className="flex items-center">
+                            <img
+                                src={`${data?.shop?.shop_avatar?.url}`}
+                                className="w-[50px] h-[50px] rounded-full"
+                                alt=""
+                            />
+                            <div className="pl-3">
+                                <h3 className={`${styles.shop_name}`}>
+                                    {data?.shop?.name}
+                                </h3>
+                                <h5 className="pb-2 text-[15px] flex items-center">
+                                    Rating: {data?.shop?.ratings} <AiFillStar color="#f6ba00" size={20} className="ml-1" />
+                                </h5>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* right side — shop description starts right after left side ends */}
+                    <div className="flex-1">
+                        <p className="py-2 text-[18px] leading-8 pb-10 whitespace-pre-line">
+                            {data?.shop?.description  || 'No seller description available.'}
+                        </p>
+                    </div>
+
+                </div>
+                ) : null
+                }
+
+
+
+
+        </div>
+    )
 }
 
 export default ProductDetail

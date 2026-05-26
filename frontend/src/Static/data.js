@@ -273,6 +273,7 @@ export const navItems = [
       ],
       shop: {
         name: "Apple inc.",
+        description: "Apple Inc. is a global leader in consumer electronics, software, and online services. Known for premium quality and innovation since 1976.",
         shop_avatar: {
           public_id: "test",
           url: "https://images.stockcake.com/public/1/c/5/1c5f326a-d867-4ac6-ba64-47b3edb9f752_large/illuminated-apple-logo-stockcake.jpg",
@@ -303,6 +304,7 @@ export const navItems = [
       ],
       shop: {
         name: "Amazon Ltd",
+        description: "Amazon is the world's largest online marketplace offering millions of products across every category with fast delivery and easy returns.",
         shop_avatar: {
           public_id: "test",
           url: "https://www.hatchwise.com/wp-content/uploads/2022/05/amazon-logo-1024x683.png",
@@ -333,6 +335,8 @@ export const navItems = [
       ],
       shop: {
         name: "Apple inc.",
+        description: "Apple Inc. is a global leader in consumer electronics, software, and online services. Known for premium quality and innovation since 1976.",
+
         shop_avatar: {
           public_id: "test",
           url: "https://images.stockcake.com/public/1/c/5/1c5f326a-d867-4ac6-ba64-47b3edb9f752_large/illuminated-apple-logo-stockcake.jpg",
@@ -349,6 +353,8 @@ export const navItems = [
     {
       id: 4,
       category:"Others",
+      description: "Shahriar Watch House is a trusted retailer of premium and fashion watches for men and women, offering the latest trends at affordable prices.",
+
       name: "New Fashionable Watch for men 2023 with multiple colors",
       description:
         "Product details are a crucial part of any eCommerce website or online marketplace. These details help the potential customers to make an informed decision about the product they are interested in buying. A well-written product description can also be a powerful marketing tool that can help to increase sales.Product details typically include information about the product's features, specifications, dimensions, weight, materials, and other relevant information that can help customers to understand the product better. The product details section should also include high-quality images and videos of the product, as well as customer reviews and ratings.",
@@ -395,6 +401,8 @@ export const navItems = [
       ],
       shop: {
         name: "Alisha Shoes Mart",
+        description: "Alisha Shoes Mart offers the latest footwear trends for men, women, and kids. Quality shoes at the best prices with all sizes available.",
+
         shop_avatar: {
           public_id: "test",
           url: "https://thumbs.dreamstime.com/b/vector-speeding-running-shoe-symbol-icon-logo-sport-wings-illustration-50683533.jpg",
@@ -425,6 +433,8 @@ export const navItems = [
       ],
       shop: {
         name: "Asus Ltd",
+        description: "Asus is a world-renowned technology brand delivering high-performance gaming gear, laptops, and accessories trusted by millions of gamers worldwide.",
+
         shop_avatar: {
           public_id: "test",
           url: "https://www.hatchwise.com/wp-content/uploads/2022/05/amazon-logo-1024x683.png",
@@ -464,6 +474,7 @@ export const navItems = [
       ],
       shop: {
         name: "Shahriar Watch House",
+        description: "Shahriar Watch House is a trusted retailer of premium and fashion watches for men and women, offering the latest trends at affordable prices.",
         shop_avatar: {
           public_id: "test",
           url: "https://www.hatchwise.com/wp-content/uploads/2022/05/amazon-logo-1024x683.png",
@@ -493,6 +504,7 @@ export const navItems = [
       ],
       shop: {
         name: "Asus Ltd",
+        description: "Asus is a world-renowned technology brand delivering high-performance gaming gear, laptops, and accessories trusted by millions of gamers worldwide.",
         shop_avatar: {
           public_id: "test",
           url: "https://www.hatchwise.com/wp-content/uploads/2022/05/amazon-logo-1024x683.png",
@@ -532,6 +544,7 @@ export const navItems = [
       ],
       shop: {
         name: "Amazon Ltd",
+description: "Amazon Ltd is one of the world's largest and most trusted online marketplaces, founded in 1994 by Jeff Bezos. We offer millions of products across every category including electronics, fashion, home appliances, books, and much more. With our fast and reliable delivery service, easy return policy, and 24/7 customer support, we ensure every shopping experience is smooth and satisfying. Whether you are looking for the latest tech gadgets or everyday essentials, Amazon has you covered with the best prices and top quality products delivered right to your doorstep.",
         shop_avatar: {
           public_id: "test",
           url: "https://www.hatchwise.com/wp-content/uploads/2022/05/amazon-logo-1024x683.png",
@@ -561,6 +574,7 @@ export const navItems = [
       ],
       shop: {
         name: "Asus Ltd",
+        description: "Asus is a world-renowned technology brand delivering high-performance gaming gear, laptops, and accessories trusted by millions of gamers worldwide.",
         shop_avatar: {
           public_id: "test",
           url: "https://www.hatchwise.com/wp-content/uploads/2022/05/amazon-logo-1024x683.png",
