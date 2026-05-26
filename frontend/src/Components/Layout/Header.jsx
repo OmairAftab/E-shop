@@ -16,7 +16,7 @@ import { CgProfile } from "react-icons/cg";
 import { backend_url } from "../../server";
 import Cart from '../Cart/Cart';
 import RxCross1 from 'react-icons/rx';
-
+import Wishlist from '../Wishlist/Wishlist';
 
 const Header = ({ activeHeading }) => {
   const { isAuthenticated, user, loading } = useSelector((state) => state.user);
@@ -234,10 +234,12 @@ const Header = ({ activeHeading }) => {
 
           {/* blue navbar k right most pe jo 3 hain icons */}
             <div className="flex"> {/* search icon with badge */}
-            <div className={`${styles.noramlFlex}`}> {/* heart icon with badge */}
+              
+              {/* WISHLIST ICON */}
+            <div className={`${styles.noramlFlex}`}> 
               <div
                 className="relative cursor-pointer mr-[15px]"
-                
+                onClick={()=> setOpenWishlist(true)}
               >
                 <AiOutlineHeart size={30} color="rgb(255 255 255 / 83%)" />
                 <span className="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 top right p-0 m-0 text-white font-mono text-[12px] leading-tight text-center">
@@ -296,12 +298,24 @@ const Header = ({ activeHeading }) => {
 
 
 
+
+
             {/* Cart popup */}
             {
               openCart ? (
                 <Cart setOpenCart={setOpenCart} />
               ) : null
             }
+
+
+
+            {/* Wishlist popup */}
+            {
+              openWishlist ? (
+                <Wishlist setOpenWishlist={setOpenWishlist} />
+              ) : null
+            }
+
 
 
 
