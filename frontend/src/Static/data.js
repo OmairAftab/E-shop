@@ -390,7 +390,7 @@ export const navItems = [
         },
         {
           public_id: "test",
-          url: "https://mirzacdns3.s3.ap-south-1.amazonaws.com/cache/catalog/RLV0015/2-800x800.jpg",
+          url: "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcR-LQOq0pQ7mNiY0TzMz3gW8GvyApFS2_S43VDoTM2nihd8Sdoa",
         },
       ],
       shop: {

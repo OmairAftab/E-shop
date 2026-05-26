@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { BrowserRouter,Route,Routes } from 'react-router-dom'
 import {LoginPage} from "./Routes.js"
-import {SignUpPage, BestSellingPage, EventsPage, FAQpage} from "./Routes.js"
+import {SignUpPage, BestSellingPage, EventsPage, FAQpage, ProductsDetailPage} from "./Routes.js"
 import HomePage from "./Pages/HomePage.jsx"
 import NotFound from "./Pages/NotFound.jsx"
 import { server } from './server.js'
@@ -44,6 +44,7 @@ const App = () => {
       <Route path="/best-selling" element={<BestSellingPage/>} />
       <Route path="/events" element={<EventsPage/>} />
       <Route path="/faq" element={<FAQpage/>} />
+      <Route path='/product/:name' element={<ProductsDetailPage/>} />
       
 
     </Routes>
