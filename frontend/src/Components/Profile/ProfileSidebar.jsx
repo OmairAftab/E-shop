@@ -6,9 +6,28 @@ import { AiOutlineMessage, AiOutlineLogin, AiOutlineLogout } from 'react-icons/a
 import { MdOutlineTrackChanges } from 'react-icons/md';
 import { RiLockPasswordLine } from 'react-icons/ri';
 import { TbAddressBook } from 'react-icons/tb';
+import { useDispatch } from 'react-redux';
+import { logoutUser } from '../../redux/actions/user';
+import { toast } from 'react-toastify';
 
 const ProfileSidebar = ({active, setActive}) => {
     const navigate = useNavigate();
+
+
+    // function for logout
+    const dispatch = useDispatch();
+
+    const logoutHandler = async () => {
+      try {
+        const res = await dispatch(logoutUser());
+        navigate('/login');
+        const msg = res?.message || res?.data?.message || (res && res.message) || "Logged out successfully";
+        toast.success(msg);
+       
+      } catch (error) {
+        toast.error(error.response?.data?.message || error.message || 'Logout failed');
+      }
+    };
 
   return (
     <div className="w-full bg-white shadow-sm rounded-[10px] p-4 pt-8">
@@ -63,13 +82,13 @@ const ProfileSidebar = ({active, setActive}) => {
 
 
 
-      {/* Change Password tab — turns red when active===6 */}
+      {/* Change Password tab — turns red when active===6
       <div className="flex items-center cursor-pointer w-full mb-8" onClick={() => setActive(6)}>
         <RiLockPasswordLine size={20} color={active === 6 ? "red" : ""} />
         <span className={`pl-3 ${active === 6 ? "text-[red]" : ""} 800px:block hidden`}>
           Change Password
         </span>
-      </div>
+      </div> */}
 
 
 
@@ -82,9 +101,9 @@ const ProfileSidebar = ({active, setActive}) => {
       </div>
 
 
-      <div className="flex items-center cursor-pointer w-full mb-8" onClick={() => setActive(7)}>
-        <AiOutlineLogin size={20} color={active === 7 ? "red" : ""} />
-        <span className={`pl-3 ${active === 7 ? "text-[red]" : ""} 800px:block hidden`}>
+      <div className="flex items-center cursor-pointer w-full mb-8" onClick={() => { setActive(8); logoutHandler(); }}>
+        <AiOutlineLogout size={20} color={active === 8 ? "red" : ""} />
+        <span className={`pl-3 ${active === 8 ? "text-[red]" : ""} 800px:block hidden`}>
           Log out
         </span>
       </div>

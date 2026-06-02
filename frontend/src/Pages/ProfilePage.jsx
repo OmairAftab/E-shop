@@ -1,12 +1,22 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Header from '../Components/Layout/Header'
 import styles from '../Styles/styles'
 import ProfileSideBar from '../Components/Profile/ProfileSidebar'
 import ProfileContent from '../Components/Profile/ProfileContent'
 import { useState } from 'react'
+import { useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 
 const ProfilePage = () => {
     const [active, setActive] = useState(1);
+  const { isAuthenticated, loading } = useSelector((state) => state.user);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (loading === false && !isAuthenticated) {
+      navigate('/login');
+    }
+  }, [isAuthenticated, loading, navigate]);
 
   return (
     <div>

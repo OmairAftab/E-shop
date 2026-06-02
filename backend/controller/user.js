@@ -126,6 +126,19 @@ router.post("/login-user", catchAsyncErrors(async(req,res,next)=>{
   // if everything valid, send token using helper (handles cookie + response)
   sendToken(checkUser, 200, res)
 
+  //generate token 
+        const token=jwt.sign({id: user._id} , process.env.JWT_SECRET , {expiresIn: '7d'})
+        
+
+        //now we have to send this token to user in res and  we will send by cookie
+        res.cookie('token', token, {
+            httpOnly:true,
+            secure: process.env.NODE_ENV === 'production', //hum ne env main NODE_ENV ko =local host rkha hai .. to is line ka mtlb ye hai k secure tb hoga jb node_env production k equal ho and localhost pe secure ni hoga
+            sameSite : process.env.NODE_ENV === 'production' ? 'none': 'strict', //samesite will be strict in local host as both the forntend and backend eill run on the same server . but in the case of production we wont be hosting frontend and backend on same place so in that case the samesite will be none  .... DURING DPLOYMENT OF BACKEND SET THE ENVIRONMENT VARIABLE NODE_ENV=production
+            maxAge: 7*24*60*60*100 //7 days written in milliseconds
+        
+        })
+
 }))
 
 
@@ -158,6 +171,29 @@ router.get("/getuser" , isAuthenticated, catchAsyncErrors(async(req,res,next)=>{
   }
 }))
 
+
+
+
+// log out user
+router.get("/logout", catchAsyncErrors(async (req, res, next) => {
+    try {
+       res.clearCookie('token', {
+            httpOnly:true,
+            secure: process.env.NODE_ENV === 'production', //hum ne env main NODE_ENV ko =local host rkha hai .. to is line k amtlb ye hai k secure tb hoga jb node_env production k equal ho and localhost pe secure ni hoga
+            sameSite : process.env.NODE_ENV === 'production' ? 'none': 'strict', //samesite will be strict in local host as both the forntend and backend eill run on the same server . but in the case of production we wont be hosting frontend and backend on same place so in that case the samesite will be none  ... DURING DPLOYMENT OF BACKEND SET THE ENVIRONMENT VARIABLE NODE_ENV=production
+            maxAge: 7*24*60*60*100 //7 days written in milliseconds
+        })
+
+        
+      res.status(201).json({
+        success: true,
+        message: "Log out successful!",
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  })
+);
 
 
 
