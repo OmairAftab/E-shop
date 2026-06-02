@@ -14,9 +14,9 @@ import DropDown from "./DropDown";
 import Navbar from "./Navbar";
 import { CgProfile } from "react-icons/cg";
 import { backend_url } from "../../server";
-import Cart from '../Cart/Cart';
+import Cart from '../Cart/cart';
 import RxCross1 from 'react-icons/rx';
-import Wishlist from '../Wishlist/Wishlist';
+import Wishlist from '../Wishlist/wishlist';
 
 const Header = ({ activeHeading }) => {
   const { isAuthenticated, user, loading } = useSelector((state) => state.user);
@@ -170,7 +170,7 @@ const Header = ({ activeHeading }) => {
 
 
      <div className={`${styles.button}`}>
-            <Link to="/seller">
+            <Link to="/create-shop">
             
               <h1 className='text-[#fff] flex items-center' >
                 Become Seller <IoIosArrowForward className='ml-1' />
@@ -330,10 +330,40 @@ const Header = ({ activeHeading }) => {
        </div>   {/* closes styles.section */}
       </div>     {/* closes flex items-center bg-[#3321c8] */}
     </div>       {/* ✅ closes the sticky active div — this was missing */}
-      
+
+
+
+
+
+
+
+{/* Mobile Navigation */}
+    <div
+        className={`${
+          active === true ? "shadow-sm fixed top-0 left-0 z-10" : null
+        }
+      w-full h-[60px] bg-[#fff] z-50 top-0 left-0 shadow-sm 800px:hidden`}
+      >
+        <div className="w-full flex items-center justify-between">
+
+            
+
+        </div>
+    </div>
 </>
     )
    }
+
+
+
+
+
+
+
+
+
+
+
    </>
    
   
