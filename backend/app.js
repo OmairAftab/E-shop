@@ -30,6 +30,12 @@ const user=require("./controller/user.js")
 // mount routes
 app.use("/user", user)
 
+
+// import routes
+const shop=require("./controller/shop.js")
+// mount routes
+app.use("/shop", shop)
+
 // for handling errors - use the error middleware
 app.use(errorMiddleware)
 
