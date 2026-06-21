@@ -7,6 +7,8 @@ const fs=require("fs")
 const { isAuthenticated} = require("../middleware/auth");
 const { upload } = require("../multer");
 const ErrorHandler = require("../middleware/error.js")
+const catchAsyncErrors = require("../middleware/catchAsyncErrors.js");
+const sendShopToken = require("../utils/shoptoken.js");
 
 
 
@@ -62,6 +64,8 @@ router.post("/create-shop", upload.single("file"), async (req, res) => {
             shop: createdShop,
         });
 
+        sendShopToken(createdShop, 201, res);
+
     } catch (err) {
         return res.status(500).json({
             success: false,
@@ -73,7 +77,7 @@ router.post("/create-shop", upload.single("file"), async (req, res) => {
 
 
 
-router.post("/shop-login", catchAsyncErrors(async (req, res, next) => {
+router.post("/shop-login", async (req, res) => {
 
   const { email, password } = req.body;
 
@@ -103,9 +107,9 @@ router.post("/shop-login", catchAsyncErrors(async (req, res, next) => {
   }
 
   // if everything is valid, send token using helper (handles cookie + response)
-  sendToken(checkUser, 200, res);
+  sendShopToken(checkUser, 200, res);
 
-}));
+});
 
 
 
