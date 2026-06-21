@@ -95,51 +95,59 @@ const createActivationToken=(user)=>{
 
 
 
-  //LOGIN FUNCTIONALITY
 
-router.post("/login-user", catchAsyncErrors(async(req,res,next)=>{
-  
-  const {email,password}=req.body;
+// LOGIN FUNCTIONALITY
 
-  if(!email || !password){
-    return next (new ErrorHandler("Please provide all fields",400))
+router.post("/login-user", catchAsyncErrors(async (req, res, next) => {
+
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).json({
+      success: false,
+      message: "Please provide all fields",
+    });
   }
 
-  const checkUser=await User.findOne({email}).select("+password");
+  const checkUser = await User.findOne({ email }).select("+password");
 
-  if(!checkUser){
-    return next(new ErrorHandler("User doesnt exist",400))
+  if (!checkUser) {
+    return res.status(400).json({
+      success: false,
+      message: "User doesn't exist",
+    });
   }
 
+  const isPasswordValid = await checkUser.comparePassword(password);
 
-  // const isPasswordValid=await bcrypt.compare(password,checkUser.password)
-  //cmparePPassword function Models/user.js main define kiya hua hai wahan se use kren ge
-
-  const isPasswordValid=await checkUser.comparePassword(password)
-
-  if(!isPasswordValid){
-    return next(new ErrorHandler("Invalid Password try again",400))
+  if (!isPasswordValid) {
+    return res.status(400).json({
+      success: false,
+      message: "Invalid Password, try again",
+    });
   }
 
+  // if everything is valid, send token using helper (handles cookie + response)
+  sendToken(checkUser, 200, res);
 
-  //if everything valid
-  // if everything valid, send token using helper (handles cookie + response)
-  sendToken(checkUser, 200, res)
+}));
+
+
 
   //generate token 
-        const token=jwt.sign({id: user._id} , process.env.JWT_SECRET , {expiresIn: '7d'})
+        // const token=jwt.sign({id: user._id} , process.env.JWT_SECRET , {expiresIn: '7d'})
         
 
-        //now we have to send this token to user in res and  we will send by cookie
-        res.cookie('token', token, {
-            httpOnly:true,
-            secure: process.env.NODE_ENV === 'production', //hum ne env main NODE_ENV ko =local host rkha hai .. to is line ka mtlb ye hai k secure tb hoga jb node_env production k equal ho and localhost pe secure ni hoga
-            sameSite : process.env.NODE_ENV === 'production' ? 'none': 'strict', //samesite will be strict in local host as both the forntend and backend eill run on the same server . but in the case of production we wont be hosting frontend and backend on same place so in that case the samesite will be none  .... DURING DPLOYMENT OF BACKEND SET THE ENVIRONMENT VARIABLE NODE_ENV=production
-            maxAge: 7*24*60*60*100 //7 days written in milliseconds
+        // //now we have to send this token to user in res and  we will send by cookie
+        // res.cookie('token', token, {
+        //     httpOnly:true,
+        //     secure: process.env.NODE_ENV === 'production', //hum ne env main NODE_ENV ko =local host rkha hai .. to is line ka mtlb ye hai k secure tb hoga jb node_env production k equal ho and localhost pe secure ni hoga
+        //     sameSite : process.env.NODE_ENV === 'production' ? 'none': 'strict', //samesite will be strict in local host as both the forntend and backend eill run on the same server . but in the case of production we wont be hosting frontend and backend on same place so in that case the samesite will be none  .... DURING DPLOYMENT OF BACKEND SET THE ENVIRONMENT VARIABLE NODE_ENV=production
+        //     maxAge: 7*24*60*60*100 //7 days written in milliseconds
         
-        })
+        // })
 
-}))
+// }))
 
 
 
@@ -177,23 +185,23 @@ router.get("/getuser" , isAuthenticated, catchAsyncErrors(async(req,res,next)=>{
 // log out user
 router.get("/logout", catchAsyncErrors(async (req, res, next) => {
     try {
-       res.clearCookie('token', {
-            httpOnly:true,
-            secure: process.env.NODE_ENV === 'production', //hum ne env main NODE_ENV ko =local host rkha hai .. to is line k amtlb ye hai k secure tb hoga jb node_env production k equal ho and localhost pe secure ni hoga
-            sameSite : process.env.NODE_ENV === 'production' ? 'none': 'strict', //samesite will be strict in local host as both the forntend and backend eill run on the same server . but in the case of production we wont be hosting frontend and backend on same place so in that case the samesite will be none  ... DURING DPLOYMENT OF BACKEND SET THE ENVIRONMENT VARIABLE NODE_ENV=production
-            maxAge: 7*24*60*60*100 //7 days written in milliseconds
-        })
+        res.clearCookie('token', {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+        });
 
-        
-      res.status(201).json({
-        success: true,
-        message: "Log out successful!",
-      });
+        res.status(200).json({
+            success: true,
+            message: "Log out successful!",
+        });
     } catch (error) {
-      return next(new ErrorHandler(error.message, 500));
+        return res.status(500).json({
+            success: false,
+            message: error.message,
+        });
     }
-  })
-);
+}));
 
 
 
