@@ -1,5 +1,6 @@
 const initialState = {
-    isAuthenticated: false,
+    isSeller: false,
+    isLoading: false,
 };
 
 export const sellerReducer = (state = initialState, action) => {
@@ -7,43 +8,43 @@ export const sellerReducer = (state = initialState, action) => {
         case "LoadSellerRequest":
             return {
                 ...state,
-                loading: true,
+                isLoading: true,
             };
 
         case "LoadSellerSuccess":
             return {
                 ...state,
-                isAuthenticated: true,
-                loading: false,
-                shop: action.payload,
+                isSeller: true,
+                isLoading: false,
+                seller: action.payload,
             };
 
         case "LoadSellerFail":
             return {
                 ...state,
-                loading: false,
+                isLoading: false,
                 error: action.payload,
-                isAuthenticated: false,
+                isSeller: false,
             };
 
         case "LogoutRequest":
             return {
                 ...state,
-                loading: true,
+                isLoading: true,
             };
 
         case "LogoutSuccess":
             return {
                 ...state,
-                loading: false,
-                isAuthenticated: false,
-                shop: null,
+                isLoading: false,
+                isSeller: false,
+                seller: null,
             };
 
         case "LogoutFail":
             return {
                 ...state,
-                loading: false,
+                isLoading: false,
                 error: action.payload,
             };
 
@@ -57,9 +58,3 @@ export const sellerReducer = (state = initialState, action) => {
             return state;
     }
 };
-
-
-
-
-
-

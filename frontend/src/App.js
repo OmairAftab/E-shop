@@ -16,11 +16,13 @@ import ProductsPage from './Pages/ProductsPage.jsx'
 import { useSelector } from 'react-redux'
 import ProfilePage from './Pages/ProfilePage.jsx'
 import { loadSeller } from './redux/actions/user.js'
+import ShopHomePage from './Pages/Shop/ShopHomePage.jsx'
 
 
 const App = () => {
 
     const { loading } = useSelector((state) => state.user);
+    const {isLoading, isSeller, seller} = useSelector((state) => state.seller);
 
 
   useEffect(()=>{
@@ -34,7 +36,7 @@ const App = () => {
   return (
     <>
     {
-      loading ?  null : 
+      loading || isLoading ?  null : 
       (
          <BrowserRouter>
     <ToastContainer position="top-right" />
@@ -49,9 +51,11 @@ const App = () => {
       <Route path="/faq" element={<FAQpage/>} />
       <Route path='/product/:name' element={<ProductsDetailPage/>} />
       <Route path='/profile' element={<ProfilePage/>} />
+
+      {/*   SHOP ROUTES */}
       <Route path='/create-shop' element={<CreateShopPage/>} />
       <Route path='/shop-login' element={<ShopLoginPage/>} />
-
+      <Route path='/shop/:id' element={<ShopHomePage/>} />
       
 
     </Routes>

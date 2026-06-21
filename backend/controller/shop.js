@@ -122,12 +122,12 @@ router.post("/shop-login", async (req, res) => {
 router.get("/getseller" , isSeller, async(req,res)=>{
   try{
     console.log(req.seller);
-    const shop=await Shop.findById(req.seller.id);
+    const seller=await Shop.findById(req.seller.id);
 
-    if(!shop){
+    if(!seller){
       return res.status(404).json({
             success: false,
-            message: "Shop not found",
+            message: "shop not found",
         });
     }
 
