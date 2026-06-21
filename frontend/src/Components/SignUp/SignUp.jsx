@@ -24,7 +24,7 @@ const SignUp = () => {
 
         
 
-        e.preventDefault()  // prevents the default form submission behavior, which would cause a page reload. We want to handle the submission with JavaScript instead.
+    e.preventDefault()  // prevents the default form submission behavior, which would cause a page reload. We want to handle the submission with JavaScript instead.
     
     const newForm = new FormData(); // FormData lets you send files + text together
     newForm.append("file", avatar)

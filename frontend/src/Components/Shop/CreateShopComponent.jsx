@@ -13,23 +13,55 @@ const CreateShopComponent = () => {
   const [phoneNumber, setPhoneNumber] = useState();
   const [address, setAddress] = useState("");
   const [zipCode, setZipCode] = useState();
-  const [avatar, setAvatar] = useState();
-  const [password, setPassword] = useState("");
   const [visible, setVisible] = useState(false);
-const navigate = useNavigate()
- const handleSubmit = async (e) => {
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate()
+
+
+
+
+// Two separate states are needed because the base64 string and the actual File
+// object serve completely different purposes — one is for display, one is for upload.
+
+const [avatar, setAvatar] = useState();
+// Holds a base64 DATA URL (a long text string like "data:image/png;base64,iVBORw0...").
+// USE: only for the <img src={avatar}> preview shown to the user after they pick a file.
+// WHY: browsers can render base64 strings directly in an <img> tag, so this gives
+// instant visual feedback without needing to upload anything yet.
+// LIMITATION: this is just text — it is NOT a real file, so it can't be sent to
+// multer on the backend. Sending this to req.file via FormData will fail, because
+// multer expects actual binary file data, not a base64 string.
+
+const [avatarFile, setAvatarFile] = useState();
+// Holds the actual File object as given by the browser (e.target.files[0]).
+// USE: this is what actually gets sent to the backend via FormData.append("file", avatarFile).
+// WHY: multer (the middleware handling file uploads on the backend) only knows how
+// to parse real File/Blob data sent in a multipart/form-data request — it cannot
+// parse a base64 string. So this state preserves the original File object untouched,
+// separate from the base64 conversion happening for the preview.
+  
+  
+  
+  
+  
+
+
+
+
+const handleSubmit = async (e) => {
   e.preventDefault();
 
+  const newForm = new FormData();
+  newForm.append("file", avatarFile); // the real File object
+  newForm.append("name", name);
+  newForm.append("email", email);
+  newForm.append("password", password);
+  newForm.append("zipCode", zipCode);
+  newForm.append("address", address);
+  newForm.append("phoneNumber", phoneNumber);
+
   axios
-    .post(`${server}/shop/create-shop`, {
-      name,
-      email,
-      password,
-      avatar,
-      zipCode,
-      address,
-      phoneNumber,
-    })
+    .post(`${server}/shop/create-shop`, newForm)
     .then((res) => {
       toast.success("Shop created successfully! Please login to your shop account.");
       setTimeout(() => {
@@ -40,6 +72,7 @@ const navigate = useNavigate()
       setEmail("");
       setPassword("");
       setAvatar();
+      setAvatarFile();
       setZipCode();
       setAddress("");
       setPhoneNumber();
@@ -55,17 +88,35 @@ const navigate = useNavigate()
 
 
 
+
+
   const handleFileInputChange = (e) => {
-    const reader = new FileReader();
+  const file = e.target.files[0];
+  // e.target.files[0] is the real File object selected by the user.
 
-    reader.onload = () => {
-      if (reader.readyState === 2) {
-        setAvatar(reader.result);
-      }
-    };
+  setAvatarFile(file);
+  // Save the real File object immediately — this is what we'll upload later. We do this BEFORE the FileReader logic below, 
+  // since FileReader is async and only needed for the preview, not for the upload itself.
 
-    reader.readAsDataURL(e.target.files[0]);
+  const reader = new FileReader();
+  // FileReader is a browser API used to read file contents — here we use it ONLY to generate a preview image, not for the actual upload.
+
+  reader.onload = () => {
+    // Runs after the file has been fully read into memory.
+    if (reader.readyState === 2) {
+      // readyState === 2 means "DONE" — the read completed successfully.
+      setAvatar(reader.result);
+      // reader.result is the base64 data URL — store it purely so <img src={avatar}> can show a live preview before submitting the form.
+    }
   };
+
+  reader.readAsDataURL(file);
+  // Triggers the async read, converting the File into a base64 string. This only affects the `avatar` preview state — it has zero effect on
+  // `avatarFile`, which already holds the original File object for upload.
+};
+
+
+
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
