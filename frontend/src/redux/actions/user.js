@@ -125,6 +125,29 @@ export const deleteUserAddress = (id) => async (dispatch) => {
 
 
 
+// load seller
+export const loadSeller = () => async (dispatch) => {
+  try {
+    dispatch({
+      type: "LoadSellerRequest",
+    });
+    const { data } = await axios.get(`${server}/shop/getseller`, {
+      withCredentials: true,
+    });
+    dispatch({
+      type: "LoadSellerSuccess",
+      payload: data.user,
+    });
+  } catch (error) {
+    dispatch({
+      type: "LoadSellerFail",
+      payload: error.response?.data?.message || error.message,
+    });
+  }
+};
+
+
+
 
 
 

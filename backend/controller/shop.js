@@ -9,6 +9,7 @@ const { upload } = require("../multer");
 const ErrorHandler = require("../middleware/error.js")
 const catchAsyncErrors = require("../middleware/catchAsyncErrors.js");
 const sendShopToken = require("../utils/shoptoken.js");
+const { isSeller } = require("../middleware/sellerauth.js");
 
 
 
@@ -112,6 +113,30 @@ router.post("/shop-login", async (req, res) => {
 });
 
 
+
+
+
+
+//load shop
+
+router.get("/getseller" , isSeller, async(req,res)=>{
+  try{
+    console.log(req.seller);
+    const shop=await Shop.findById(req.seller.id);
+
+    if(!shop){
+      return res.status(404).json({
+            success: false,
+            message: "Shop not found",
+        });
+    }
+
+    res.status(200).json({success:true, shop})
+  }
+  catch(err){
+    return res.json(err.message)
+  }
+})
 
 
 

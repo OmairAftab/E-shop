@@ -13,7 +13,7 @@ const Hero = () => {
           <h1 className="text-[38px] md:text-[60px] font-bold leading-tight text-blue-800">
             Pak MultiVendor Store
           </h1>
-          <p className="text-lg text-gray-600 leading-relaxed">
+          <p className="text-xl  text-gray-600 leading-relaxed">
             Your ultimate shopping destination, powered by the best vendors around. Browse, compare, and buy with confidence  because great products and great sellers belong together.
           </p>
 

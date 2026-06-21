@@ -15,6 +15,7 @@ import { loadUser } from './redux/actions/user.js'
 import ProductsPage from './Pages/ProductsPage.jsx'
 import { useSelector } from 'react-redux'
 import ProfilePage from './Pages/ProfilePage.jsx'
+import { loadSeller } from './redux/actions/user.js'
 
 
 const App = () => {
@@ -24,7 +25,8 @@ const App = () => {
 
   useEffect(()=>{
 
-    Store.dispatch(loadUser())
+    Store.dispatch(loadUser())   // dispatches the loadUser action to fetch the current user's data from the server when the component mounts. This is important for maintaining user authentication state across page reloads or when the user navigates to different parts of the application.
+    Store.dispatch(loadSeller()) // dispatches the loadSeller action to fetch the current seller's data from the server when the component mounts. This is important for maintaining seller authentication state across page reloads or when the seller navigates to different parts of the application.
 
   },[])
 
