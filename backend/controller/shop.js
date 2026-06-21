@@ -73,6 +73,43 @@ router.post("/create-shop", upload.single("file"), async (req, res) => {
 
 
 
+router.post("/shop-login", catchAsyncErrors(async (req, res, next) => {
+
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).json({
+      success: false,
+      message: "Please provide all fields",
+    });
+  }
+
+  const checkUser = await Shop.findOne({ email }).select("+password");
+
+  if (!checkUser) {
+    return res.status(400).json({
+      success: false,
+      message: "User doesn't exist",
+    });
+  }
+
+  const isPasswordValid = await checkUser.comparePassword(password);
+
+  if (!isPasswordValid) {
+    return res.status(400).json({
+      success: false,
+      message: "Invalid Password, try again",
+    });
+  }
+
+  // if everything is valid, send token using helper (handles cookie + response)
+  sendToken(checkUser, 200, res);
+
+}));
+
+
+
+
 
 
 
