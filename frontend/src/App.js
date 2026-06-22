@@ -17,7 +17,7 @@ import { useSelector } from 'react-redux'
 import ProfilePage from './Pages/ProfilePage.jsx'
 import { loadSeller } from './redux/actions/user.js'
 import ShopHomePage from './Pages/Shop/ShopHomePage.jsx'
-
+import SellerAuthRoute from './routes/SellerAuthRoute.js'
 
 const App = () => {
 
@@ -53,8 +53,24 @@ const App = () => {
       <Route path='/profile' element={<ProfilePage/>} />
 
       {/*   SHOP ROUTES */}
-      <Route path='/create-shop' element={<CreateShopPage/>} />
-      <Route path='/shop-login' element={<ShopLoginPage/>} />
+      <Route
+        path='/create-shop'
+        element={
+          <SellerAuthRoute>
+            <CreateShopPage />
+          </SellerAuthRoute>
+        }
+      />
+
+      <Route
+        path='/shop-login'
+        element={
+          <SellerAuthRoute>
+            <ShopLoginPage />
+          </SellerAuthRoute>
+        }
+      />
+        
       <Route path='/shop/:id' element={<ShopHomePage/>} />
       
 
