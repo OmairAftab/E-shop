@@ -1,6 +1,6 @@
 const initialState = {
     isSeller: false,
-    isLoading: false,
+    isLoading: true,
 };
 
 export const sellerReducer = (state = initialState, action) => {
