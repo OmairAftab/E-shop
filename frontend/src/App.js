@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { BrowserRouter,Route,Routes } from 'react-router-dom'
-import {LoginPage,SignUpPage, BestSellingPage, EventsPage, FAQpage, ProductsDetailPage, ShopLoginPage,  CreateShopPage} from "./routes/Routes.js"
+import {LoginPage,SignUpPage, BestSellingPage, EventsPage, FAQpage, ProductsDetailPage, ShopLoginPage,  CreateShopPage, CheckoutPage} from "./routes/Routes.js"
 import ShopDashboardPage from './Pages/Shop/ShopDashboardPage.jsx'
 import HomePage from "./Pages/HomePage.jsx"
 import NotFound from "./Pages/NotFound.jsx"
@@ -18,6 +18,7 @@ import ProfilePage from './Pages/ProfilePage.jsx'
 import { loadSeller } from './redux/actions/user.js'
 import ShopHomePage from './Pages/Shop/ShopHomePage.jsx'
 import SellerAuthRoute from './routes/SellerAuthRoute.js'
+import ProtectedRoute from './routes/ProtectedRoute.js'
 
 const App = () => {
 
@@ -51,6 +52,15 @@ const App = () => {
       <Route path="/faq" element={<FAQpage/>} />
       <Route path='/product/:name' element={<ProductsDetailPage/>} />
       <Route path='/profile' element={<ProfilePage/>} />
+
+      <Route
+          path="/checkout"
+          element={
+            <ProtectedRoute>
+              <CheckoutPage />
+            </ProtectedRoute>
+          }
+        />
 
       {/*   SHOP ROUTES */}
       <Route
