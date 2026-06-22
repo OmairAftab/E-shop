@@ -11,9 +11,8 @@ const SellerAuthRoute = ({ children }) => {
 
   // If seller is logged in, redirect them away from the login page
   if (isSeller) {
-    // navigate to the seller's shop home if we have an id, otherwise to a generic shop route
-    const shopId = seller?._id || seller?.id;
-    return <Navigate to={shopId ? `/shop/${shopId}` : `/shop`} replace />;
+    
+    return <Navigate to={`/dashboard`} replace />;
   }
 
   return children;
