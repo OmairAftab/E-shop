@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { BrowserRouter,Route,Routes } from 'react-router-dom'
-import {LoginPage} from "./Routes.js"
-import {SignUpPage, BestSellingPage, EventsPage, FAQpage, ProductsDetailPage, ShopLoginPage,  CreateShopPage} from "./Routes.js"
+import {LoginPage,SignUpPage, BestSellingPage, EventsPage, FAQpage, ProductsDetailPage, ShopLoginPage,  CreateShopPage} from "./routes/Routes.js"
+import ShopDashboardPage from './Pages/Shop/ShopDashboardPage.jsx'
 import HomePage from "./Pages/HomePage.jsx"
 import NotFound from "./Pages/NotFound.jsx"
 import { server } from './server.js'
@@ -68,6 +68,15 @@ const App = () => {
           <SellerAuthRoute>
             <ShopLoginPage />
           </SellerAuthRoute>
+        }
+      />
+
+      <Route
+        path='/dashboard'
+        element={
+          
+            <ShopDashboardPage />
+          
         }
       />
         
