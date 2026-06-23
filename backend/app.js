@@ -25,16 +25,24 @@ if (process.env.NODE_ENV !== "PRODUCTION") {          // only runs in developmen
 }
 
 
-// import routes
+// import user routes
 const user=require("./controller/user.js")
 // mount routes
 app.use("/user", user)
 
 
-// import routes
+// import shop routes
 const shop=require("./controller/shop.js")
 // mount routes
 app.use("/shop", shop)
+
+
+//import product routes
+const product=require("./controller/product.js")
+//mount routes
+app.use("/product", product)
+
+
 
 // for handling errors - use the error middleware
 app.use(errorMiddleware)
