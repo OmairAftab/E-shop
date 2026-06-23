@@ -8,12 +8,11 @@ const SellerAuthRoute = ({ children }) => {
   if (isLoading === true) {
     return <Loader />;
   }
-
-  // If seller is logged in, redirect them away from the login page
-  if (isSeller) {
+  else{// If seller is logged in, redirect them away from the login page
+    if (isSeller) {
     
-    return <Navigate to={`/dashboard`} replace />;
-  }
+     return <Navigate to={`/dashboard`} replace />;
+  } }
 
   return children;
 };

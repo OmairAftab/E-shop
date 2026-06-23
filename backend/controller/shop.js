@@ -122,16 +122,17 @@ router.post("/shop-login", async (req, res) => {
 router.get("/getseller" , isSeller, async(req,res)=>{
   try{
     console.log(req.seller);
-    const seller=await Shop.findById(req.seller.id);
+    // `isSeller` middleware already sets `req.seller` (the Shop document)
+    const seller = req.seller;
 
-    if(!seller){
+    if (!seller) {
       return res.status(404).json({
-            success: false,
-            message: "shop not found",
-        });
+        success: false,
+        message: "seller not found",
+      });
     }
 
-    res.status(200).json({success:true, shop})
+    res.status(200).json({ success: true, seller });
   }
   catch(err){
     return res.json(err.message)
