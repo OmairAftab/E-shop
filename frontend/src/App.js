@@ -89,8 +89,12 @@ const App = () => {
           
         }
       />
+
         
-      <Route path='/shop/:id' element={<ShopHomePage/>} />
+      <Route path='/shop/:id' element={ 
+        
+          <ShopHomePage/>
+        } />
       
 
     </Routes>
