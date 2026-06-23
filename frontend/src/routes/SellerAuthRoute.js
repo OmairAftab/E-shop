@@ -9,9 +9,9 @@ const SellerAuthRoute = ({ children }) => {
     return <Loader />;
   }
   else{// If seller is logged in, redirect them away from the login page
-    if (isSeller) {
+    if (!isSeller) {
     
-     return <Navigate to={`/dashboard`} replace />;
+     return <Navigate to={`/shop-login`} replace />;
   } }
 
   return children;

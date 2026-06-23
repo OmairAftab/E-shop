@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { BrowserRouter,Route,Routes } from 'react-router-dom'
 import {LoginPage,SignUpPage, BestSellingPage, EventsPage, FAQpage, ProductsDetailPage, ShopLoginPage,  CreateShopPage, CheckoutPage} from "./routes/Routes.js"
+import { ShopCreateProduct } from './routes/ShopRoutes.js'
 import ShopDashboardPage from './Pages/Shop/ShopDashboardPage.jsx'
 import HomePage from "./Pages/HomePage.jsx"
 import NotFound from "./Pages/NotFound.jsx"
@@ -81,20 +82,33 @@ const App = () => {
         }
       />
 
+      <Route path='/shop/:id' element={ 
+          <SellerAuthRoute>
+            <ShopHomePage/>
+          </SellerAuthRoute>
+        } />
+
       <Route
         path='/dashboard'
         element={
-          
+          <SellerAuthRoute>
             <ShopDashboardPage />
-          
+          </SellerAuthRoute>
+        }
+      />
+
+
+      <Route
+        path='/dashboard-create-product'
+        element={
+          <SellerAuthRoute>
+            <ShopCreateProduct />
+          </SellerAuthRoute>
         }
       />
 
         
-      <Route path='/shop/:id' element={ 
-        
-          <ShopHomePage/>
-        } />
+      
       
 
     </Routes>
