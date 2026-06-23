@@ -1,19 +1,23 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { useState } from 'react'
+import { useState , useEffect} from 'react'
 import { AiOutlinePlusCircle } from 'react-icons/ai'
 import { categoriesData } from '../../Static/data'
 import { useDispatch } from 'react-redux'
+import { createProduct } from "../../redux/actions/product";
+import { toast } from 'react-toastify'
 
 const CreateProduct = () => {
 
     const { seller } = useSelector((state) => state.seller);
+    const {isLoading, success, error} = useSelector((state) => state.products);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const [images, setImages] = useState([]);
+  const [imagesPreview, setImagesPreview] = useState([]);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
@@ -24,16 +28,58 @@ const CreateProduct = () => {
 
 
 
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+    }
+    if (success) {
+      navigate("/dashboard");
+      window.location.reload();
+    }
+  }, [dispatch, error, success]);
+
+
+
+  
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
-    setImages((prevImages) => [...prevImages, ...files.map((file) => URL.createObjectURL(file))]);
-  }
+    setImages((prev) => [...prev, ...files]);
+    setImagesPreview((prev) => [...prev, ...files.map((file) => URL.createObjectURL(file))]);
+  };
+  
 
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Here you can handle the form submission, e.g., send the data to your backend or perform any other actions.
-  }
+
+    
+
+    const newForm = new FormData();
+
+    images.forEach((file) => {
+      newForm.append("images", file);
+    });
+    newForm.append("name", name);
+    newForm.append("description", description);
+    newForm.append("category", category);
+    newForm.append("tags", tags);
+    if (originalPrice !== undefined && originalPrice !== "") {
+      newForm.append("originalPrice", Number(originalPrice));
+    }
+    if (discountPrice !== undefined && discountPrice !== "") {
+      newForm.append("discountPrice", Number(discountPrice));
+    }
+    if (stock !== undefined && stock !== "") {
+      newForm.append("stock", Number(stock));
+    }
+    if (seller?._id) {
+      newForm.append("shopId", seller._id);
+    }
+
+    dispatch(createProduct(newForm));
+
+    toast.success("Product created successfully!");
+  };
 
 
    return (
@@ -136,7 +182,7 @@ const CreateProduct = () => {
 
         <br />
         <div>
-          <label className="pb-2">Previous price (Write if you are provinding discount)</label>
+          <label className="pb-2">Previous price (Write only if you are providing discount)</label>
           <input
             type="number"
             name="price"
@@ -220,8 +266,8 @@ const CreateProduct = () => {
             <label htmlFor="upload">
               <AiOutlinePlusCircle size={30} className="mt-3" color="#555" />
             </label>
-            {images &&
-              images.map((i) => (
+            {imagesPreview &&
+              imagesPreview.map((i) => (
                 <img
                   src={i}
                   key={i}
