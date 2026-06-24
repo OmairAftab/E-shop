@@ -1,6 +1,7 @@
 import React from 'react'
 import DashboardHeader from '../../Components/Shop/Layout/DashboardHeader'
 import DashboardSideBar from '../../Components/Shop/Layout/DashboardSideBar'
+import AllProductsOfASingleShop from '../../Components/Shop/AllProductsOfASingleShop'
 
 
 
@@ -18,7 +19,7 @@ const ShopAllProduct = () => {
             </div>
 
             <div className="w-full justify-center flex">
-               
+               <AllProductsOfASingleShop/>
             </div>
 
         </div>

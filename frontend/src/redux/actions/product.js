@@ -29,3 +29,34 @@ export const createProduct = (formData) => async (dispatch) => {
     }
 
 }
+
+
+
+
+
+
+
+
+
+
+// get all products of a single shop
+export const getAllProductsShop = (id) => async (dispatch) => {
+    try{
+        dispatch({
+            type:"getAllProductsShopRequest"
+        })
+
+        const {data}=await axios.get(`${server}/product/get-all-products-shop/${id}`)
+        dispatch({
+            type:"getAllProductsShopSuccess",
+            payload:data.products
+        })
+    }
+    catch(error){
+        dispatch({
+            type:"getAllProductsShopFailed",
+            payload:error.response.data.message
+        })
+    }
+
+}
