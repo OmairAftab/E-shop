@@ -47,15 +47,17 @@ export const getAllProductsShop = (id) => async (dispatch) => {
         })
 
         const {data}=await axios.get(`${server}/product/get-all-products-shop/${id}`)
+        console.log('getAllProductsShop response:', data)
         dispatch({
             type:"getAllProductsShopSuccess",
             payload:data.products
         })
     }
     catch(error){
+        console.log('getAllProductsShop error:', error.response?.data || error.message || error)
         dispatch({
             type:"getAllProductsShopFailed",
-            payload:error.response.data.message
+            payload:error.response?.data?.message || error.message,
         })
     }
 

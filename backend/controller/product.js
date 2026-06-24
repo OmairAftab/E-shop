@@ -59,7 +59,7 @@ router.post("/create-product", upload.array("images"), async(req, res) => {
 
 
 //ROUTE FOR GETTING ALL PRODUCTS OF A SHOP
-router.get('get-all-products-shop/:id', async(req, res) => {
+router.get('/get-all-products-shop/:id', async(req, res) => {
     try{
         const shopId=req.params.id;
         // Fetch all products with the given shopId mean all products of just that shop

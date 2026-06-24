@@ -16,8 +16,11 @@ const AllProductsOfASingleShop = () => {
   }
 }, [dispatch, seller]);
 
+//VERIFIED THE DATA:
+//   console.log('seller', seller, 'seller._id', seller && seller._id)
+//   console.log('products', products)
 
-    console.log(products && products)
+    
   return (
     <div> </div>
   )
