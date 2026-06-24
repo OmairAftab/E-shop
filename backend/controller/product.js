@@ -52,4 +52,28 @@ router.post("/create-product", upload.array("images"), async(req, res) => {
 
 
 
+
+
+
+
+
+
+//ROUTE FOR GETTING ALL PRODUCTS OF A SHOP
+router.get('get-all-products-shop/:id', async(req, res) => {
+    try{
+        const shopId=req.params.id;
+        // Fetch all products with the given shopId mean all products of just that shop
+        const products=await Product.find({shopId:shopId}); 
+        return res.status(200).json({
+            success: true,
+            products
+        });
+    } catch (err) {
+        return res.status(500).json({
+            success: false,
+            message: err.message
+        });
+    }
+});
+
 module.exports=router;
