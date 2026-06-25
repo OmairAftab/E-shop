@@ -148,6 +148,34 @@ export const loadSeller = () => async (dispatch) => {
 
 
 
+// logout seller
+export const logoutSeller = () => async (dispatch) => {
+  try {
+    dispatch({
+      type: "SellerLogoutRequest",
+    });
+
+    const { data } = await axios.get(`${server}/shop/logout`, {
+      withCredentials: true,
+    });
+
+    dispatch({
+      type: "SellerLogoutSuccess",
+      payload: data.message,
+    });
+
+    return data;
+  } catch (error) {
+    dispatch({
+      type: "SellerLogoutFail",
+      payload: error.response?.data?.message || error.message,
+    });
+    throw error;
+  }
+};
+
+
+
 
 
 

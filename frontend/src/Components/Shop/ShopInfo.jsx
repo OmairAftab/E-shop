@@ -1,16 +1,26 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { backend_url } from '../../server.js'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import styles from '../../Styles/styles.js'
+import { logoutSeller } from '../../redux/actions/user.js'
+import { toast } from 'react-toastify'
 
 const ShopInfo = ({isOwner}) => {
     const { seller } = useSelector((state) => state.seller);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
-    const logoutHandler = () => {
-        localStorage.removeItem("seller_token");
-        window.location.reload();
+    const logoutHandler = async () => {
+        try {
+          const res = await dispatch(logoutSeller());
+          navigate('/shop-login');
+          toast.success(res?.message || 'Log out successful!');
+        } catch (error) {
+          toast.error(error.response?.data?.message || error.message || 'Logout failed');
+        }
     }
+    
 
     // THIS IS THE COMPONENT WHICH IS CALLED IN THE SHOP HOMEPAGE AND IT DISPLAYS THE SHOP INFO LIKE ITS AVATAR, NAME, DESCRIPTION,
     // ADDRESS, PHONE NUMBER, TOTAL PRODUCTS, RATINGS, JOINED DATE AND ALSO PROVIDES THE OPTION TO EDIT SHOP OR LOGOUT ONLY

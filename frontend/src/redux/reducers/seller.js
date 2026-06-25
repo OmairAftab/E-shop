@@ -27,13 +27,13 @@ export const sellerReducer = (state = initialState, action) => {
                 isSeller: false,
             };
 
-        case "LogoutRequest":
+        case "SellerLogoutRequest":
             return {
                 ...state,
                 isLoading: true,
             };
 
-        case "LogoutSuccess":
+        case "SellerLogoutSuccess":
             return {
                 ...state,
                 isLoading: false,
@@ -41,7 +41,7 @@ export const sellerReducer = (state = initialState, action) => {
                 seller: null,
             };
 
-        case "LogoutFail":
+        case "SellerLogoutFail":
             return {
                 ...state,
                 isLoading: false,

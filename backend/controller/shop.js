@@ -135,11 +135,42 @@ router.get("/getseller" , isSeller, async(req,res)=>{
     res.status(200).json({ success: true, seller });
   }
   catch(err){
-    return res.json(err.message)
+    return res.status(500).json({
+      success: false,
+      message: err.message
+    });
   }
 })
 
 
+
+
+
+
+//logout shop
+router.get("/logout", async(req,res) => {
+    try {
+    const options = {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    };
+
+        res.clearCookie('seller_token', {
+      ...options,
+        });
+
+        res.status(200).json({
+            success: true,
+            message: "Log out successful!",
+        });
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: error.message,
+        });
+    }
+});
 
 
 

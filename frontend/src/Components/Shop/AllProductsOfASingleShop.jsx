@@ -8,6 +8,7 @@ import { Button } from "@mui/material";
 import { AiOutlineEye, AiOutlineDelete } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import Loader from '../Layout/Loader.jsx';
+import { toast } from 'react-toastify';
 
 
 const AllProductsOfASingleShop = () => {
@@ -24,6 +25,8 @@ const AllProductsOfASingleShop = () => {
 }, [dispatch, seller]);
 
 
+
+
 const handleDeleteProduct = async (id) => {
   try {
     await dispatch(deleteProduct(id));    // Dispatch the deleteProduct action to delete the product with the given id. This will trigger the corresponding reducer to update the state and remove the product from the list.
@@ -31,10 +34,18 @@ const handleDeleteProduct = async (id) => {
     if (seller && seller._id) {
       dispatch(getAllProductsShop(seller._id));  // Refresh the product list after deletion so that the deleted product is removed from the UI. This ensures that the user sees the updated list of products without needing to manually refresh the page.
     }
+
+    toast.success("Product deleted successfully");  
+
   } catch (error) {
     console.error("Failed to delete product:", error);
+    toast.error("Failed to delete product");
   }
 }
+
+
+
+
 
 
   const columns = [
