@@ -32,6 +32,23 @@ export const productReducer = createReducer(initialState, (builder) => {
             state.isLoading = false;
             state.error = action.payload;
         })
+
+
+// REDUCERS HELPFUL FOR DELETING A PRODUCT OF A SHOP
+        .addCase("deleteProductRequest", (state) => {
+            state.isLoading = true;
+        })
+        .addCase("deleteProductSuccess", (state, action) => {
+            state.isLoading = false;
+            state.message = action.payload.message;
+            state.products = state.products.filter(
+                (product) => product._id !== action.payload.id
+            );
+        })
+        .addCase("deleteProductFailed", (state, action) => {
+            state.isLoading = false;
+            state.error = action.payload;
+        })
         .addCase("clearError", (state) => {
             state.error = null;
         });

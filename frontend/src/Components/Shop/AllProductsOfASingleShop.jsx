@@ -2,6 +2,13 @@ import React from 'react'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getAllProductsShop } from '../../redux/actions/product.js'
+import { deleteProduct } from '../../redux/actions/product.js'
+import { DataGrid } from "@mui/x-data-grid";
+import { Button } from "@mui/material";
+import { AiOutlineEye, AiOutlineDelete } from "react-icons/ai";
+import { Link } from "react-router-dom";
+import Loader from '../Layout/Loader.jsx';
+
 
 const AllProductsOfASingleShop = () => {
 
@@ -16,13 +23,117 @@ const AllProductsOfASingleShop = () => {
   }
 }, [dispatch, seller]);
 
-//VERIFIED THE DATA:
-//   console.log('seller', seller, 'seller._id', seller && seller._id)
-//   console.log('products', products)
+
+const handleDeleteProduct = async (id) => {
+  try {
+    await dispatch(deleteProduct(id));    // Dispatch the deleteProduct action to delete the product with the given id. This will trigger the corresponding reducer to update the state and remove the product from the list.
+   
+    if (seller && seller._id) {
+      dispatch(getAllProductsShop(seller._id));  // Refresh the product list after deletion so that the deleted product is removed from the UI. This ensures that the user sees the updated list of products without needing to manually refresh the page.
+    }
+  } catch (error) {
+    console.error("Failed to delete product:", error);
+  }
+}
+
+
+  const columns = [
+    { field: "id", headerName: "Product Id", minWidth: 150, flex: 0.7 },
+    {
+      field: "name",
+      headerName: "Name",
+      minWidth: 180,
+      flex: 1.4,
+    },
+    {
+      field: "price",
+      headerName: "Price",
+      minWidth: 100,
+      flex: 0.6,
+    },
+    {
+      field: "Stock",
+      headerName: "Stock",
+      type: "number",
+      minWidth: 80,
+      flex: 0.5,
+    },
+
+    {
+      field: "sold",
+      headerName: "Sold out",
+      type: "number",
+      minWidth: 130,
+      flex: 0.6,
+    },
+    {
+      field: "Preview",
+      flex: 0.8,
+      minWidth: 100,
+      headerName: "",
+      type: "number",
+      sortable: false,
+      renderCell: (params) => {
+        return (
+          <>
+            <Link to={`/product/${params.id}`}>
+              <Button>
+                <AiOutlineEye size={20} />
+              </Button>
+            </Link>
+          </>
+        );
+      },
+    },
+    {
+      field: "Delete",
+      flex: 0.8,
+      minWidth: 120,
+      headerName: "",
+      type: "number",
+      sortable: false,
+      renderCell: (params) => {
+        return (
+          <>
+            <Button onClick={() => handleDeleteProduct(params.id)}>
+              <AiOutlineDelete size={20} />
+            </Button>
+          </>
+        );
+      },
+    },
+  ];
+
+  const row = [];
+
+  products &&
+    products.forEach((item) => {
+      row.push({
+        id: item._id,
+        name: item.name,
+        price: "US $" + item.discountPrice,
+        Stock: item.stock,
+        sold: item?.sold_out,
+      });
+    });
 
     
   return (
-    <div> </div>
+    <>
+    {
+      isLoading ? (
+        <Loader />
+      ) : (
+        <DataGrid
+          rows={row}
+          columns={columns}
+          pageSize={10}
+          autoheight
+          disableSelectionOnClick
+        />
+      )
+    }
+    </>
   )
 }
 

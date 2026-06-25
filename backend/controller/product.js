@@ -6,6 +6,7 @@ const Product = require("../model/product");
 const fs=require("fs")
 const { upload } = require("../multer");
 const Shop = require("../model/shop");
+const { isSeller } = require("../middleware/sellerauth");
 
 
 //CREATE PRODUCT
@@ -67,6 +68,35 @@ router.get('/get-all-products-shop/:id', async(req, res) => {
         return res.status(200).json({
             success: true,
             products
+        });
+    } catch (err) {
+        return res.status(500).json({
+            success: false,
+            message: err.message
+        });
+    }
+});
+
+
+
+
+
+
+
+// controller for deleting a product if a shop
+router.delete('/delete-shop-product/:id',  isSeller, async(req, res) => {
+    try{
+        const productId=req.params.id;
+        const product = await Product.findByIdAndDelete(productId);
+        if (!product) {
+            return res.status(404).json({
+                success: false,
+                message: "Product not found"
+            });
+        }
+        return res.status(200).json({
+            success: true,
+            message: "Product deleted successfully",
         });
     } catch (err) {
         return res.status(500).json({
