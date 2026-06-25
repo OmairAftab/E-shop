@@ -8,6 +8,20 @@ const { upload } = require("../multer");
 const Shop = require("../model/shop");
 const { isSeller } = require("../middleware/sellerauth");
 
+const deleteUploadedFile = async (fileName) => {
+    if (!fileName) return;
+
+    const filePath = path.join(__dirname, "..", "..", "uploads", fileName);
+
+    try {
+        await fs.promises.unlink(filePath);
+    } catch (error) {
+        if (error.code !== "ENOENT") {
+            throw error;
+        }
+    }
+};
+
 
 //CREATE PRODUCT
 router.post("/create-product", upload.array("images"), async(req, res) => {
@@ -87,13 +101,20 @@ router.get('/get-all-products-shop/:id', async(req, res) => {
 router.delete('/delete-shop-product/:id',  isSeller, async(req, res) => {
     try{
         const productId=req.params.id;
-        const product = await Product.findByIdAndDelete(productId);
+        const product = await Product.findById(productId);
         if (!product) {
             return res.status(404).json({
                 success: false,
                 message: "Product not found"
             });
         }
+
+        await Promise.all(
+            (product.images || []).map((image) => deleteUploadedFile(image))
+        );
+
+        await Product.findByIdAndDelete(productId);
+
         return res.status(200).json({
             success: true,
             message: "Product deleted successfully",

@@ -73,20 +73,26 @@ const CreateEvent = () => {
 
     const newForm = new FormData();
 
+    const appendIfHasValue = (key, value) => {
+      if (value !== undefined && value !== null && value !== "") {
+        newForm.append(key, value);
+      }
+    };
+
     images.forEach((image) => {
       newForm.append("images", image);
     });
 
-    newForm.append("name", name);
-    newForm.append("description", description);
-    newForm.append("category", category);
-    newForm.append("tags", tags);
-    newForm.append("originalPrice", originalPrice);
-    newForm.append("discountPrice", discountPrice);
-    newForm.append("stock", stock);
-    newForm.append("shopId", seller._id);
-    newForm.append("start_Date", startDate?.toISOString());
-    newForm.append("Finish_Date", endDate?.toISOString());
+    appendIfHasValue("name", name);
+    appendIfHasValue("description", description);
+    appendIfHasValue("category", category);
+    appendIfHasValue("tags", tags);
+    appendIfHasValue("originalPrice", originalPrice);
+    appendIfHasValue("discountPrice", discountPrice);
+    appendIfHasValue("stock", stock);
+    appendIfHasValue("shopId", seller._id);
+    appendIfHasValue("start_Date", startDate?.toISOString());
+    appendIfHasValue("Finish_Date", endDate?.toISOString());
 
     dispatch(createevent(newForm));
   };
@@ -179,6 +185,7 @@ const CreateEvent = () => {
             type="number"
             name="price"
             value={discountPrice}
+            required
             className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             onChange={(e) => setDiscountPrice(e.target.value)}
             placeholder="Enter your event product price with discount..."
@@ -193,6 +200,7 @@ const CreateEvent = () => {
             type="number"
             name="stock"
             value={stock}
+            required
             className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             onChange={(e) => setStock(e.target.value)}
             placeholder="Enter your event product stock..."

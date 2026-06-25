@@ -4,6 +4,22 @@ const Event = require("../model/event");
 const router = express.Router();
 const { upload } = require("../multer");
 const { isSeller } = require("../middleware/sellerauth");
+const path = require("path");
+const fs = require("fs");
+
+const deleteUploadedFile = async (fileName) => {
+    if (!fileName) return;
+
+    const filePath = path.join(__dirname, "..", "..", "uploads", fileName);
+
+    try {
+        await fs.promises.unlink(filePath);
+    } catch (error) {
+        if (error.code !== "ENOENT") {
+            throw error;
+        }
+    }
+};
 
 
 
@@ -85,13 +101,22 @@ router.get('/get-all-events/:id', async(req, res) => {
 router.delete('/delete-shop-event/:id',  isSeller, async(req, res) => {
     try{
         const eventId=req.params.id;
-        const event = await Event.findByIdAndDelete(eventId);
+        const event = await Event.findById(eventId);
         if (!event) {
             return res.status(404).json({
                 success: false,
                 message: "Event not found"
             });
         }
+
+        await Promise.all(
+            (event.images || []).map((image) =>
+                deleteUploadedFile(image?.public_id || image?.url?.split("/").pop())
+            )
+        );
+
+        await Event.findByIdAndDelete(eventId);
+
         return res.status(200).json({
             success: true,
             message: "Event deleted successfully",
