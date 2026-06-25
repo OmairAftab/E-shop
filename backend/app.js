@@ -39,8 +39,14 @@ app.use("/shop", shop)
 
 //import product routes
 const product=require("./controller/product.js")
-//mount routes
+    //mount routes
 app.use("/product", product)
+
+
+//import event routes
+const event=require("./controller/event.js")
+//mount routes
+app.use("/event", event)
 
 
 
