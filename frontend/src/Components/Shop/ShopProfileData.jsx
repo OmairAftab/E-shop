@@ -5,26 +5,38 @@ import styles from '../../Styles/styles.js'
 import { backend_url } from '../../server.js'
 import { productData } from '../../Static/data.js'
 import ProductCard from '../Route/ProductCard/ProductCard.jsx'
+import { useDispatch, useSelector } from 'react-redux'
+import { useParams } from 'react-router-dom'
+import { getAllProductsShop } from '../../redux/actions/product.js'
+import { getAllEventsShop } from '../../redux/actions/event.js'
+// import Loader from '../Layout/Loader.jsx'
+// import { toast } from 'react-toastify'
+import Ratings from '../Products/Ratings.jsx'
 
 const ShopProfileData = ({ isOwner }) => {
+
+  const { products } = useSelector((state) => state.products);
+  const { events } = useSelector((state) => state.events);
+  const { id } = useParams();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getAllProductsShop(id));
+    dispatch(getAllEventsShop(id));
+  }, [dispatch]);
 
     const [active, setActive] = useState(1);
     //YE ACTIVE WALA HO HEE HISAAB A JESE USER K PAGE PE SIDEBAR THA ORDERTRACKING, PROFILE, CHANGE PASSWORD ETC.
     //  WAHI HAI YE ACTIVE WALA HISAAB. JAB USER CLICK KAREGA TOH ACTIVE STATE CHANGE HO JAYEGA AUR USKE HISAB SE DATA SHOW HOGA.
 
+  
+  const allReviews =
+    products && products.map((product) => product.reviews).flat();
+
   return (
     <div className="w-full">
       <div className="flex w-full items-center justify-between">
         <div className="w-full flex">
-
-
-
-    {/* if active === 1,2,3, etc, that tab text turns red (selected state); clicking any tab calls setActive(n), 
-    which re-renders all three tabs and updates which one shows red — the actual content shown below 
-    (products/events/reviews) should also depend on this same `active` value */}
-
-
-        
           <div className="flex items-center" onClick={() => setActive(1)}>
             <h5
               className={`font-[600] text-[20px] ${
@@ -37,9 +49,7 @@ const ShopProfileData = ({ isOwner }) => {
 
 
 
-
-
-
+          
           <div className="flex items-center" onClick={() => setActive(2)}>
             <h5
               className={`font-[600] text-[20px] ${
@@ -50,10 +60,6 @@ const ShopProfileData = ({ isOwner }) => {
             </h5>
           </div>
 
-
-
-
-
           <div className="flex items-center" onClick={() => setActive(3)}>
             <h5
               className={`font-[600] text-[20px] ${
@@ -63,25 +69,13 @@ const ShopProfileData = ({ isOwner }) => {
               Shop Reviews
             </h5>
           </div>
-
-
-
-
         </div>
-
-
-
-
-
-        {/* Only the shop owner sees this "Go to Dashboard" button — regular visitors viewing the shop page should not see it,
-         since they can't access seller-only pages. isOwner is passed down as a prop from the parent
-         (set true only when the logged-in seller is viewing their own shop). */}
         <div>
           {isOwner && (
             <div>
               <Link to="/dashboard">
                 <div className={`${styles.button} !rounded-[4px] h-[42px]`}>
-                  <span className="text-[#fff]">Go to Dashboard</span>
+                  <span className="text-[#fff]">Go Dashboard</span>
                 </div>
               </Link>
             </div>
@@ -89,24 +83,66 @@ const ShopProfileData = ({ isOwner }) => {
         </div>
       </div>
 
-
-
-
-
       <br />
-
       {active === 1 && (
         <div className="grid grid-cols-1 gap-[20px] md:grid-cols-2 md:gap-[25px] lg:grid-cols-3 lg:gap-[25px] xl:grid-cols-4 xl:gap-[20px] mb-12 border-0">
-          {/* this isn;t the actual shop data.. will make it dynamic after sometime */}
-          {productData &&
-            productData.map((i, index) => (
+          {products &&
+            products.map((i, index) => (
               <ProductCard data={i} key={index} isShop={true} />
             ))}
         </div>
       )}
 
-    </div>
-  )
-}
+      {active === 2 && (
+        <div className="w-full">
+          <div className="grid grid-cols-1 gap-[20px] md:grid-cols-2 md:gap-[25px] lg:grid-cols-3 lg:gap-[25px] xl:grid-cols-4 xl:gap-[20px] mb-12 border-0">
+            {events &&
+              events.map((i, index) => (
+                <ProductCard
+                  data={i}
+                  key={index}
+                  isShop={true}
+                  isEvent={true}
+                />
+              ))}
+          </div>
+          {events && events.length === 0 && (
+            <h5 className="w-full text-center py-5 text-[18px]">
+              No Events have for this shop!
+            </h5>
+          )}
+        </div>
+      )}
 
-export default ShopProfileData
+      {active === 3 && (
+        <div className="w-full">
+          {allReviews &&
+            allReviews.map((item, index) => (
+              <div className="w-full flex my-4">
+                <img
+                  src={`${item.user.avatar?.url}`}
+                  className="w-[50px] h-[50px] rounded-full"
+                  alt=""
+                />
+                <div className="pl-2">
+                  <div className="flex w-full items-center">
+                    <h1 className="font-[600] pr-2">{item.user.name}</h1>
+                    <Ratings rating={item.rating} />
+                  </div>
+                  <p className="font-[400] text-[#000000a7]">{item?.comment}</p>
+                  <p className="text-[#000000a7] text-[14px]">{"2days ago"}</p>
+                </div>
+              </div>
+            ))}
+          {allReviews && allReviews.length === 0 && (
+            <h5 className="w-full text-center py-5 text-[18px]">
+              No Reviews have for this shop!
+            </h5>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default ShopProfileData;

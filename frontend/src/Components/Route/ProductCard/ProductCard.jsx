@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import styles from '../../../Styles/styles';
+import { backend_url } from '../../../server';
 import {
   AiFillHeart,
   AiFillStar,
@@ -25,9 +26,54 @@ const ProductCard = ({ data }) => {
   const [click, setClick] = useState(false);
   const [open, setOpen] = useState(false);
 
+  const resolveImageUrl = (image) => {
+    if (!image) return null;
+
+    if (typeof image === 'string') {
+      if (image.startsWith('http://') || image.startsWith('https://') || image.startsWith('data:')) {
+        return image;
+      }
+
+      if (image.startsWith('/')) {
+        return `${backend_url}${image.replace(/^\//, '')}`;
+      }
+
+      return `${backend_url}uploads/${image}`;
+    }
+
+    if (typeof image === 'object') {
+      const objectUrl = image.url || image.src;
+
+      if (!objectUrl) return null;
+
+      if (objectUrl.startsWith('http://') || objectUrl.startsWith('https://') || objectUrl.startsWith('data:')) {
+        return objectUrl;
+      }
+
+      if (objectUrl.startsWith('/')) {
+        return `${backend_url}${objectUrl.replace(/^\//, '')}`;
+      }
+
+      return `${backend_url}uploads/${objectUrl}`;
+    }
+
+    return null;
+  };
+
   const d = data?.name || '';
   const product_name = d.replace(/\s+/g, '-'); // replace spaces with '-'
-  const imgSrc = data?.image_Url[0].url || data?.image_Url[1]?.url || data?.image_Url || "https://via.placeholder.com/300";
+  const imageCandidates = [
+    ...(Array.isArray(data?.images) ? data.images : []),
+    ...(Array.isArray(data?.image_Url) ? data.image_Url : []),
+    data?.image_Url,
+    data?.image,
+    data?.thumbnail,
+  ];
+  const imageSource = imageCandidates.map(resolveImageUrl).find(Boolean);
+  const shopName = data?.shop?.name || 'Unknown shop';
+  const imgSrc = imageSource || 'https://via.placeholder.com/300';
+  const displayPrice = data?.price ?? data?.discountPrice ?? data?.discount_price ?? 0;
+  const soldCount = data?.total_sell ?? data?.sold_out ?? 0;
 
   return (
     <>
@@ -46,7 +92,7 @@ const ProductCard = ({ data }) => {
         {/* //this link is for the shop ... we havent made shops yet */}
         <Link to="/">
          <h5 className={`${styles.shop_name}`}>
-            {data.shop.name}
+            {shopName}
          </h5> 
         </Link>
 
@@ -57,7 +103,7 @@ const ProductCard = ({ data }) => {
         {/* name of the product */}
         <Link to={`/product/${product_name}`}>
          <h4 className='pb-3 font-[500]'>
-            {data.name.length > 40 ? data.name.slice(0, 40) + "..." : data.name}
+            {d.length > 40 ? d.slice(0, 40) + "..." : d}
          </h4>
 
           <div className="flex">
@@ -101,7 +147,7 @@ const ProductCard = ({ data }) => {
           <div className="flex items-center justify-between py-2">
               <div className='flex'>
                 <h5 className={`${styles.productDiscountPrice}`}>
-                  {data.price ? `${data.price}$` : `${data.discount_price}$`}
+                  {`${displayPrice}$`}
                 </h5>
 
               </div>
@@ -110,7 +156,7 @@ const ProductCard = ({ data }) => {
 
                 {/* shows kitne sold hue hain */}
                 <span className="font-[400] text-[17px] text-[#68d284]">
-                  {data?.total_sell} sold
+                  {soldCount} sold
                 </span>
           </div>
 

@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { RxCross1 } from "react-icons/rx";
 import styles from '../../../Styles/styles';
+import { backend_url } from '../../../server';
 import {
   AiFillHeart,
   AiOutlineHeart,
@@ -23,15 +24,86 @@ const ProductDetailsCard = ({setOpen, data}) => {
 
     const handleMessageSubmit = () => {};
 
+
+    
+    const resolveImageUrl = (image) => {
+      if (!image) return null;
+
+      if (typeof image === 'string') {
+        if (image.startsWith('http://') || image.startsWith('https://') || image.startsWith('data:')) {
+          return image;
+        }
+
+        if (image.startsWith('/')) {
+          return `${backend_url}${image.replace(/^\//, '')}`;
+        }
+
+        return `${backend_url}uploads/${image}`;
+      }
+
+      if (typeof image === 'object') {
+        const objectUrl = image.url || image.src;
+
+        if (!objectUrl) return null;
+
+        if (objectUrl.startsWith('http://') || objectUrl.startsWith('https://') || objectUrl.startsWith('data:')) {
+          return objectUrl;
+        }
+
+        if (objectUrl.startsWith('/')) {
+          return `${backend_url}${objectUrl.replace(/^\//, '')}`;
+        }
+
+        return `${backend_url}uploads/${objectUrl}`;
+      }
+
+      return null;
+    };
+
+
+
+
+    // THE IMAGE CANDIDATES ARRAY IS USED TO STORE ALL POSSIBLE IMAGE SOURCES FOR A PRODUCT, events, OR SHOP.
+    //  IT INCLUDES VARIOUS PROPERTIES THAT MAY CONTAIN IMAGE URLs, SUCH AS data.images, data.image_Url, 
+    // data.image, data.thumbnail, AND THE SHOP'S AVATAR. THE resolveImageUrl FUNCTION IS THEN USED TO DETERMINE 
+    // THE ACTUAL URL TO USE FOR DISPLAYING THE IMAGE. AS WE ARE USING THIS PRODUCT CARD AND WE HAVE TO COVER THAT HOW TO SHOW
+    //  THEIR PICTURES BASED ON HOW EVENT'S MODEL IS TAKING THE PICTURES AND HOW PRODUCT'S MODEL IS TAKING THE PICTURES AND 
+    // HOW SHOP'S MODEL IS TAKING THE PICTURES SO WE HAVE TO COVER ALL OF THEM SO THAT'S WHY WE ARE USING THIS IMAGE CANDIDATES ARRAY.
+    const imageCandidates = [
+      ...(Array.isArray(data?.images) ? data.images : []),
+      ...(Array.isArray(data?.image_Url) ? data.image_Url : []),
+      data?.image_Url,
+      data?.image,
+      data?.thumbnail,
+    ];
+    const imageSource = imageCandidates.map(resolveImageUrl).find(Boolean);
+    const shopAvatar = resolveImageUrl(data?.shop?.shop_avatar?.url || data?.shop?.shop_avatar);
+    const shopName = data?.shop?.name || 'Unknown shop';
+
+
+
+
+
+
+
       const decrementCount = () => {
-    if (count > 1) {
-      setCount(count - 1);
+       if (count > 1) {
+       setCount(count - 1);
     }
   };
+
+
+
 
   const incrementCount = () => {
     setCount(count + 1);
   };
+
+
+  //actually data.price is simply of products but we used the productcard for events also so we used the data.discountPrice for events and data.discount_price for products so we used the nullish coalescing operator to check which one is present and then we used that one
+  const displayPrice = data?.price ?? data?.discountPrice ?? data?.discount_price ?? 0;
+  //same for soldCount we used the data.total_sell for products and data.sold_out for events so we used the nullish coalescing operator to check which one is present and then we used that one
+  const soldCount = data?.total_sell ?? data?.sold_out ?? 0;
 
   return (
     <div className="bg-[#fff]">
@@ -47,11 +119,11 @@ const ProductDetailsCard = ({setOpen, data}) => {
 
             <div className="block w-full 800px:flex">
               <div className="w-full 800px:w-[50%]">
-                <img src={`${data.image_Url[0].url}`} alt="" />
+                <img src={imageSource || 'https://via.placeholder.com/300'} alt="" />
                 <div className="flex">
                     <img
                       alt=""
-                      src={`${data.shop.shop_avatar.url}`}   
+                      src={shopAvatar || 'https://via.placeholder.com/50'}   
                       className="w-[50px] h-[50px] rounded-full mr-2"
                     />
 
@@ -59,7 +131,7 @@ const ProductDetailsCard = ({setOpen, data}) => {
 {/* show shop name and rating inside product card */}
                     <div>
                       <h3 className={`${styles.shop_name}`}>
-                        {data.shop.name}
+                        {shopName}
                       </h3>
                       <h5 className="pb-3 text-[15px]">({data?.shop.ratings}) Ratings</h5>
                     </div>
@@ -77,7 +149,7 @@ const ProductDetailsCard = ({setOpen, data}) => {
                   </span>
                 </div>
 
-                 <h5 className="text-[16px] text-[red] mx-2 mt-5"> ({data.total_sell}) Sold out</h5>
+                 <h5 className="text-[16px] text-[red] mx-2 mt-5"> ({soldCount}) Sold out</h5>
 
                  </div>
 
@@ -96,7 +168,7 @@ const ProductDetailsCard = ({setOpen, data}) => {
                     {data.discount_price}$
                   </h4>
                   <h3 className={`${styles.price}`}>
-                    {data.price ? `${data.price}$` : null}
+                    {displayPrice}$
                   </h3>
                 </div>
 
