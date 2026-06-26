@@ -49,6 +49,10 @@ const event=require("./controller/event.js")
 app.use("/event", event)
 
 
+const couponCode=require("./controller/couponCode.js")
+app.use("/coupon", couponCode)
+
+
 
 // for handling errors - use the error middleware
 app.use(errorMiddleware)

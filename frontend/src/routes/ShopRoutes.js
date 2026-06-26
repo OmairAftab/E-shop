@@ -3,11 +3,13 @@ import ShopCreateProduct from '../Pages/Shop/ShopCreateProduct'
 import ShopAllProduct from '../Pages/Shop/ShopAllProduct'
 import ShopCreateEvents from '../Pages/Shop/ShopCreateEvents'
 import ShopAllEvents from '../Pages/Shop/ShopAllEvents'
+import ShopAllCoupons from '../Pages/Shop/ShopAllCoupons'
 
 export {
     ShopDashboardPage,
     ShopCreateProduct,
     ShopAllProduct,
     ShopCreateEvents,
-    ShopAllEvents
+    ShopAllEvents,
+    ShopAllCoupons
 }
