@@ -175,6 +175,33 @@ router.get("/logout", async(req,res) => {
 
 
 
+//get shop info
+router.get("/get-shop-info/:id", async(req,res)=>{
+  try{
+    const shop=await Shop.findById(req.params.id);
+    if(!shop){
+      return res.status(404).json({
+        success:false,
+        message:"Shop not found"
+      });
+    }
+
+    res.status(200).json({
+      success:true,
+      shop
+    });
+
+  }
+  catch(err){
+    return res.status(500).json({
+      success: false,
+      message: err.message
+    });
+  }
+})
+
+
+
 
 
 module.exports = router;

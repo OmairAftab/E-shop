@@ -1,15 +1,39 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { backend_url } from '../../server.js'
+import { server, backend_url } from '../../server.js'
 import { Link, useNavigate } from 'react-router-dom'
 import styles from '../../Styles/styles.js'
 import { logoutSeller } from '../../redux/actions/user.js'
 import { toast } from 'react-toastify'
+import { useParams } from 'react-router-dom'
+import { useEffect , useState} from 'react'
+import { getAllProductsShop } from '../../redux/actions/product.js'
+import { getAllEventsShop } from '../../redux/actions/event.js'
+import axios from 'axios'
+
 
 const ShopInfo = ({isOwner}) => {
     const { seller } = useSelector((state) => state.seller);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [data, setData] = useState({});
+
+  const { id } = useParams();
+    useEffect(() => {
+    if (!id) return;
+
+        axios.get(`${server}/shop/get-shop-info/${id}`, {
+            withCredentials: true
+        }).then((res) => {
+          console.log(res);
+          console.log("Fetched shop info:", res.data.shop);
+            setData(res.data.shop);
+        }).catch((error) => {
+            console.error("Error fetching shop info:", error);
+        });
+  }, [id]);
+
+  const shop = data?._id ? data : seller;
 
     const logoutHandler = async () => {
         try {
@@ -33,32 +57,32 @@ const ShopInfo = ({isOwner}) => {
           <div className="w-full flex item-center justify-center">
             <img
               src={(() => {
-                  const url = seller.avatar?.url;
+                  const url = shop.avatar?.url;
                   if (!url) return "/logo192.png";
                   if (url.startsWith("http") || url.startsWith("data:")) return url;
                   return `${backend_url}${url.startsWith("/") ? url.slice(1) : url}`;
                   })()}
-                  alt={seller.name || "Seller"}                
+                  alt={shop.name || "Seller"}                
                   className="w-[150px] h-[150px] object-cover rounded-full"
             />
           </div>
 
-          <h3 className="text-center py-2 text-[20px]">{seller.name}</h3>
+          <h3 className="text-center py-2 text-[20px]">{shop.name}</h3>
 
           <p className="text-[16px] text-[#000000a6] p-[10px] flex items-center">
-            {seller.description}
+            {shop.description}
           </p>
 
         </div>
 
         <div className="p-3">
           <h5 className="font-[600]">Address</h5>
-          <h4 className="text-[#000000a6]">{seller.address}</h4>
+          <h4 className="text-[#000000a6]">{shop.address}</h4>
         </div>
 
         <div className="p-3">
           <h5 className="font-[600]">Phone Number</h5>
-          <h4 className="text-[#000000a6]">{seller.phoneNumber}</h4>
+          <h4 className="text-[#000000a6]">{shop.phoneNumber}</h4>
         </div>
 
         <div className="p-3">
@@ -73,7 +97,7 @@ const ShopInfo = ({isOwner}) => {
 
         <div className="p-3">
           <h5 className="font-[600]">Joined On</h5>
-          <h4 className="text-[#000000b0]">{seller?.createdAt?.slice(0, 10)}</h4>
+          <h4 className="text-[#000000b0]">{shop?.createdAt?.slice(0, 10)}</h4>
         </div>
 
         {isOwner && (
