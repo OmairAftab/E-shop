@@ -30,7 +30,7 @@ const Header = ({ activeHeading }) => {
   const [openCart,setOpenCart] = useState(false);
   const [openWishlist,setOpenWishlist] = useState(false);
 
-  // const { allProducts } = useSelector((state) => state.products);
+  const { allProducts } = useSelector((state) => state.products);
 
   const handleSearchChange = (e) => {
     const term = e.target.value;
@@ -46,16 +46,33 @@ const Header = ({ activeHeading }) => {
 
     const termLower = term.toLowerCase();                                                    // converts search term to lowercase for case-insensitive comparison
 
-    const normalized = (productData || []).reduce((acc, p) => {                         // loops through productData (uses [] if productData is null/undefined)
+    const normalized = (allProducts || []).reduce((acc, p) => {                         // loops through allProducts (uses [] if null/undefined)
       const name = (p.name || "").trim();                                                // gets product name, uses empty string if null, removes extra spaces
       if (!name) return acc;                                                             // skips this product if name is empty
       const key = name.toLowerCase();                                                    // converts name to lowercase to use as unique key
       if (!acc.map.has(key)) {                                                           // checks if this product name already exists in map (prevents duplicates)
         acc.map.set(key, true);                                                          // adds name to map to mark it as seen
+        
+        let resolvedImage = "https://via.placeholder.com/40";
+        const rawImg = p.images?.[0] || p.image_Url?.[0]?.url || p.image_Url;
+        if (rawImg) {
+          if (typeof rawImg === 'string') {
+            if (rawImg.startsWith('http://') || rawImg.startsWith('https://') || rawImg.startsWith('data:')) {
+              resolvedImage = rawImg;
+            } else if (rawImg.startsWith('/')) {
+              resolvedImage = `${backend_url}${rawImg.slice(1)}`;
+            } else {
+              resolvedImage = `${backend_url}uploads/${rawImg}`;
+            }
+          } else if (typeof rawImg === 'object' && rawImg.url) {
+            resolvedImage = rawImg.url;
+          }
+        }
+
         acc.list.push({                                                                  // adds product to list with only needed fields
           id: p._id || p.id,                                                            // uses _id (mongodb) or id whichever exists
           name,                                                                          // product name
-          image: p.image_Url?.[0]?.url || p.images?.[0]?.url || p.image_Url || "https://via.placeholder.com/40", // gets image url, tries two possible field names, falls back to placeholder
+          image: resolvedImage,
         });
       }
       return acc;                                                                        // returns accumulator for next iteration
@@ -148,10 +165,7 @@ const Header = ({ activeHeading }) => {
                     >
                       <div className="w-full flex items-center py-2 hover:bg-gray-100 rounded px-2">
                         <img
-                          src={
-                            i.image_Url?.[0]?.url || i.images?.[0]?.url || 
-                            "https://via.placeholder.com/40"
-                          }
+                          src={i.image}
                           alt=""
                           className="w-[40px] h-[40px] mr-[10px] object-cover"
                         />

@@ -9,18 +9,18 @@ const BestDeals = () => {
     const [data,setData]=useState([])
 
 
-    const {products, isLoading} = useSelector((state) => state.products);
-  const featuredProducts = products && products.length !== 0 ? products : productData; //mean agar dynamic data hai to wo show kra do
-                                                                                      //agar nhi hto static data show krao
+    const { allProducts } = useSelector((state) => state.products);
 
     useEffect(()=>{
-
-        const dddata= products && products.length !==0 ? products : productData;  //mean agar dynamic data hai to wo show kra do nhi to static data show krao
-        const d=dddata && dddata.sort((a,b)=>(b.sold_out || b.total_sell)-(a.sold_out || a.total_sell))
-        const firstFive=d.slice(0,5)
-        setData(firstFive)
-
-    },[])
+        const dddata = allProducts && allProducts.length !== 0 ? allProducts : [];
+        const sortedData = [...dddata].sort((a,b) => {
+            const aSold = a.sold_out ?? a.total_sell ?? 0;
+            const bSold = b.sold_out ?? b.total_sell ?? 0;
+            return bSold - aSold;
+        });
+        const firstFive = sortedData.slice(0,5);
+        setData(firstFive);
+    },[allProducts])
 
 
   return (

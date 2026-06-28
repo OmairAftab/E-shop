@@ -7,13 +7,9 @@ import { productData } from '../../../Static/data'
 
 const FeaturedProducts = () => {
 
-  const {products, isLoading} = useSelector((state) => state.products);
-  const featuredProducts = products && products.length !== 0 ? products : productData; //mean agar dynamic data hai to wo show kra do
-                                                                                      //agar nhi hto static data show krao
+  const { allProducts } = useSelector((state) => state.products);
+  const featuredProducts = allProducts;
 
-  useEffect(()=>{
-    console.log("products in FeaturedProducts:", featuredProducts);
-  },[featuredProducts])
 
   return (
     

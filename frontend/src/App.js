@@ -18,6 +18,7 @@ import { useSelector } from 'react-redux'
 import ProfilePage from './Pages/ProfilePage.jsx'
 import { loadSeller } from './redux/actions/user.js'
 import ShopHomePage from './Pages/Shop/ShopHomePage.jsx'
+import { getAllProducts } from './redux/actions/product.js'
 import SellerAuthRoute from './routes/SellerAuthRoute.js'
 import ProtectedRoute from './routes/ProtectedRoute.js'
 import SellerRedirectRoute from './routes/SellerRedirectRoute.js'
@@ -32,6 +33,7 @@ const App = () => {
 
     Store.dispatch(loadUser())   // dispatches the loadUser action to fetch the current user's data from the server when the component mounts. This is important for maintaining user authentication state across page reloads or when the user navigates to different parts of the application.
     Store.dispatch(loadSeller()) // dispatches the loadSeller action to fetch the current seller's data from the server when the component mounts. This is important for maintaining seller authentication state across page reloads or when the seller navigates to different parts of the application.
+    Store.dispatch(getAllProducts())
 
   },[])
 
