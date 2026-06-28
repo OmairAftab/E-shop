@@ -5,13 +5,14 @@ import styles from "../../Styles/styles";
 import ProductCard from "../Route/ProductCard/ProductCard";
 
 const SuggestedProducts = ({ data }) => {
-  const [products, setProducts] = useState();
+  const { allProducts } = useSelector((state) => state.products);
+  const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    const d =
-    productData && productData.filter((i) => i.category === data.category);
+    const productsSource = allProducts && allProducts.length !== 0 ? allProducts : productData;
+    const d = productsSource.filter((i) => i.category === data.category && (i._id !== data._id && i.id !== data.id));
     setProducts(d);
-  }, []);
+  }, [allProducts, data]);
 
   return (
     <div>

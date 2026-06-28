@@ -10,17 +10,18 @@ import Header from "../Components/Layout/Header";
 
 
 const BestSellingPage = () => {
- 
-    const [data, setData] = useState([]);
+  const { allProducts } = useSelector((state) => state.products);
+  const [data, setData] = useState([]);
 
-
-
- useEffect(() => {
-
-    const d= productData && productData.sort((a,b)=> b.total_sell - a.total_sell).slice(0,10);
-    setData(d);
-
- } , [])  
+  useEffect(() => {
+    const productsSource = allProducts && allProducts.length !== 0 ? allProducts : productData;
+    const sortedData = [...productsSource].sort((a, b) => {
+      const aSold = a.sold_out ?? a.total_sell ?? 0;
+      const bSold = b.sold_out ?? b.total_sell ?? 0;
+      return bSold - aSold;
+    });
+    setData(sortedData);
+  }, [allProducts]);
 
 
   return (

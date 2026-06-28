@@ -1,10 +1,9 @@
-import React, { use } from 'react'
+import React, { useEffect, useState } from 'react'
 import Header from '../Components/Layout/Header'
 import ProductDetail from '../Components/Products/ProductDetail'
 import Footer from '../Components/Layout/Footer'
 import { useParams } from 'react-router-dom'
-import { useState } from 'react'
-import { useEffect } from 'react'
+import { useSelector } from 'react-redux'
 import { productData } from '../Static/data'
 import SuggestedProducts from '../Components/Products/SuggestedProducts'
 
@@ -15,15 +14,25 @@ import SuggestedProducts from '../Components/Products/SuggestedProducts'
 const ProductsDetailPage = () => {
 
     const {name} = useParams();
+    const { allProducts } = useSelector((state) => state.products);
     const [data,setData]=useState(null);
-    const productName=name.replace(/-/g," ");   // jahan url main - lgi a hai usko space se replace krna hai taki product name match kr ske db se
 
 
-    // finds the product from productData whose name matches productName and saves it to state.
+    // finds the product from allProducts or productData whose ID or name matches the parameter
     useEffect(()=>{
-        const data=productData.find((item)=> item.name.toLowerCase() === productName.toLowerCase());
-        setData(data);
-    },[])
+        const productsSource = allProducts && allProducts.length !== 0 ? allProducts : productData;
+        
+        // Try to find by ID first (in case name is an ID)
+        let foundProduct = productsSource.find((item) => (item._id || item.id) === name);
+        
+        // If not found by ID, try to find by name (replacing dashes with spaces)
+        if (!foundProduct) {
+            const productName = name.replace(/-/g, " ");
+            foundProduct = productsSource.find((item) => item.name.toLowerCase() === productName.toLowerCase());
+        }
+
+        setData(foundProduct);
+    },[allProducts, name])
 
   return (
     <div>

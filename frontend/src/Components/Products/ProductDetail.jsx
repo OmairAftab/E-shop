@@ -52,6 +52,7 @@ const ProductDetail = ({ data }) => {
   const incrementCount = () => setCount(count + 1);
   const decrementCount = () => { if (count > 1) setCount(count - 1); };
 
+
   const images = [];
   if (Array.isArray(data?.images)) {
     data.images.forEach(img => {
@@ -179,7 +180,7 @@ const ProductDetail = ({ data }) => {
 
                   {/* shop info */}
                   <div className="flex items-center pt-8">
-                    <Link to={`/shop/preview/${data?.shop._id}`}>
+                    <Link to={`/shop/${data?.shop._id}`}>
                       <img
                         src={shopAvatar || 'https://via.placeholder.com/50'}
                         alt=""
@@ -334,8 +335,8 @@ const ProductDetailInfo= ({data})=>{
             {   active === 3 ? (
                     <div className="w-full block 800px:flex items-start px-2 py-5 gap-6">
 
-                    {/* left side — shop info */}
-                    <div className="flex-shrink-0">
+                    <Link to={`/shop/${data?.shop._id}`}>
+                    <div className="flex-shrink-0"> {/* left side — shop info */}
                         <div className="flex items-center">
                             <img
                                 src={infoShopAvatar || 'https://via.placeholder.com/50'}
@@ -352,6 +353,7 @@ const ProductDetailInfo= ({data})=>{
                             </div>
                         </div>
                     </div>
+                    </Link>
 
                     {/* right side — shop description starts right after left side ends */}
                     <div className="flex-1">
