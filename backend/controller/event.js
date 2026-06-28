@@ -77,7 +77,7 @@ router.post("/create-event", upload.array("images"), async(req, res) => {
 
 
 
-
+//get all events of a shop
 router.get('/get-all-events/:id', async(req, res) => {
     try{
         const shopId=req.params.id;
@@ -131,6 +131,24 @@ router.delete('/delete-shop-event/:id',  isSeller, async(req, res) => {
 
 
 
+
+
+
+//get all events
+router.get('/get-all-events', async(req, res) => {
+    try {
+        const events = await Event.find().sort({ createdAt: -1 });
+        return res.status(200).json({
+            success: true,
+            events
+        });
+    } catch (err) {
+        return res.status(500).json({
+            success: false,
+            message: err.message
+        });
+    }
+});
 
 
 

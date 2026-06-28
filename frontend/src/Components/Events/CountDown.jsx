@@ -1,12 +1,6 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { server } from "../../server";
 
-
-// NOT DYNAMIC COUNTDOWN, I HAVE SET A FIXED DATE, YOU CAN CHANGE IT TO DYNAMIC IF YOU WANT
-// JB DYNAMIC HOGA TO DATA AS A PROP RECEIVE HOGA TO PHIR BAAD MAIN SET KREN GE
-
-const CountDown = () => {
+const CountDown = ({ data }) => {
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
 
   useEffect(() => {
@@ -18,7 +12,8 @@ const CountDown = () => {
   });
 
   function calculateTimeLeft() {
-    const difference = +new Date("2026-5-23") - +new Date();
+    if (!data?.Finish_Date) return {};
+    const difference = +new Date(data.Finish_Date) - +new Date();
     let timeLeft = {};
 
     if (difference > 0) {
@@ -39,7 +34,7 @@ const CountDown = () => {
     }
 
     return (
-      <span key={interval} className="text-[25px] text-[#475ad2]">
+      <span key={interval} className="text-[25px] text-[#475ad2] mr-2 font-[500]">
         {timeLeft[interval]} {interval}{" "}
       </span>
     );
@@ -48,9 +43,11 @@ const CountDown = () => {
   return (
     <div>
       {timerComponents.length ? (
-        timerComponents
+        <div className="flex flex-wrap items-center mt-2">
+          {timerComponents}
+        </div>
       ) : (
-        <span className="text-[red] text-[25px]">Time's Up</span>
+        <span className="text-[red] text-[25px] font-[500]">Event Ended</span>
       )}
     </div>
   );

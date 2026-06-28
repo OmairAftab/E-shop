@@ -3,6 +3,7 @@ import { createReducer } from "@reduxjs/toolkit";
 const initialState = {
     isLoading: true,
     events: [],
+    allEvents: [],
 }
 
 export const eventReducer = createReducer(initialState, (builder) => {

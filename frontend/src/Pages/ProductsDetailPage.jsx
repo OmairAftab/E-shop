@@ -15,24 +15,29 @@ const ProductsDetailPage = () => {
 
     const {name} = useParams();
     const { allProducts } = useSelector((state) => state.products);
+    const { allEvents } = useSelector((state) => state.events);
     const [data,setData]=useState(null);
 
 
-    // finds the product from allProducts or productData whose ID or name matches the parameter
+    // finds the product from allProducts, allEvents, or productData whose ID or name matches the parameter
     useEffect(()=>{
         const productsSource = allProducts && allProducts.length !== 0 ? allProducts : productData;
+        const eventsSource = allEvents && allEvents.length !== 0 ? allEvents : [];
+        const combinedSource = [...productsSource, ...eventsSource]; // Combine products and events into a single array for searching
+                                                                    //its basically done ta k hum product ho ya event, dono ka data
+                                                                    //aik e tareeqe se show kra rhe
         
         // Try to find by ID first (in case name is an ID)
-        let foundProduct = productsSource.find((item) => (item._id || item.id) === name);
+        let foundProduct = combinedSource.find((item) => (item._id || item.id) === name);
         
         // If not found by ID, try to find by name (replacing dashes with spaces)
         if (!foundProduct) {
             const productName = name.replace(/-/g, " ");
-            foundProduct = productsSource.find((item) => item.name.toLowerCase() === productName.toLowerCase());
+            foundProduct = combinedSource.find((item) => item.name.toLowerCase() === productName.toLowerCase());
         }
 
         setData(foundProduct);
-    },[allProducts, name])
+    },[allProducts, allEvents, name])
 
   return (
     <div>

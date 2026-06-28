@@ -67,6 +67,8 @@ export const deleteEvent = (id) => async (dispatch) => {
   }
 };
 
+
+
 // get all events
 export const getAllEvents = () => async (dispatch) => {
   try {
