@@ -12,21 +12,24 @@ import Header from "../Components/Layout/Header";
 const ProductsPage = () => {
   const [searchParams] = useSearchParams();
   const categoryData = searchParams.get("category");
- const [data, setData] = useState([]);
+  const { allProducts } = useSelector((state) => state.products);
+  const [data, setData] = useState([]);
 
- useEffect(() => {
-  if(categoryData===null){                                              /// if no category in URL → sort all products by total_sell and show top 10
-    const d= productData && productData.sort((a,b)=> a.total_sell - b.total_sell).slice(0,10);
-    setData(d);
-  }
-  else{                                                                 // // if category exists in URL → filter and show only products of that category
-    const d= productData && productData.filter(i=> i.category === categoryData);
-    setData(d);
-  }
-
-  // window.scrollTo(0,0);
-
- } , [])  
+  useEffect(() => {
+    const productsSource = allProducts && allProducts.length !== 0 ? allProducts : [];
+    if(categoryData===null){
+      const d = [...productsSource].sort((a,b) => {
+        const aSold = a.sold_out ?? a.total_sell ?? 0;
+        const bSold = b.sold_out ?? b.total_sell ?? 0;
+        return aSold - bSold;
+      });
+      setData(d);
+    }
+    else{
+      const d = productsSource.filter(i => i.category === categoryData);
+      setData(d);
+    }
+  } , [allProducts, categoryData])  
 
 
   return (
