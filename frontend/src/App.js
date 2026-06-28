@@ -20,6 +20,7 @@ import { loadSeller } from './redux/actions/user.js'
 import ShopHomePage from './Pages/Shop/ShopHomePage.jsx'
 import SellerAuthRoute from './routes/SellerAuthRoute.js'
 import ProtectedRoute from './routes/ProtectedRoute.js'
+import SellerRedirectRoute from './routes/SellerRedirectRoute.js'
 
 const App = () => {
 
@@ -69,18 +70,18 @@ const App = () => {
       <Route
         path='/create-shop'
         element={
-          <SellerAuthRoute>
+          <SellerRedirectRoute>
             <CreateShopPage />
-          </SellerAuthRoute>
+          </SellerRedirectRoute>
         }
       />
 
       <Route
         path='/shop-login'
         element={
-          <SellerAuthRoute>
+          <SellerRedirectRoute>
             <ShopLoginPage />
-          </SellerAuthRoute>
+          </SellerRedirectRoute>
         }
       />
 
