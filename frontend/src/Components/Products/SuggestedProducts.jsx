@@ -9,8 +9,9 @@ const SuggestedProducts = ({ data }) => {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    const productsSource = allProducts && allProducts.length !== 0 ? allProducts : productData;
-    const d = productsSource.filter((i) => i.category === data.category && (i._id !== data._id && i.id !== data.id));
+    
+    //JIN PRODUCTS KI CATEGORY HUMARE DATA KI CATEGORY KE BARABAR HAI AUR JINKE ID HUMARE DATA KE ID KE BARABAR NA HO(mean same product related product main show nhi krni ) UNHE FILTER KARKE setdata() kr rhe mean data set kr diya and neeche for each data hum ne product card component ko call kiya aur data pass kiya jisse product card component me data show ho jaye
+    const d = allProducts.filter((i) => i.category === data.category && (i._id !== data._id));
     setProducts(d);
   }, [allProducts, data]);
 
