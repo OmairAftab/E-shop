@@ -71,6 +71,7 @@ const ProductCard = ({ data }) => {
   ];
   const imageSource = imageCandidates.map(resolveImageUrl).find(Boolean);
   const shopName = data?.shop?.name || 'Unknown shop';
+  const shopId = data?.shop?._id || '';
   const imgSrc = imageSource || 'https://via.placeholder.com/300';
   const displayPrice = data?.price ?? data?.discountPrice ?? data?.discount_price ?? 0;
   const soldCount = data?.total_sell ?? data?.sold_out ?? 0;
@@ -90,7 +91,7 @@ const ProductCard = ({ data }) => {
 
 
         {/* //this link is for the shop ... we havent made shops yet */}
-        <Link to="/">
+        <Link to={`/shop/${shopId}`}>
          <h5 className={`${styles.shop_name}`}>
             {shopName}
          </h5> 

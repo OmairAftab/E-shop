@@ -8,6 +8,7 @@ import {
   AiOutlineMessage,
   AiOutlineShoppingCart,
 } from "react-icons/ai";
+import { Link } from 'react-router-dom';
 
 
 
@@ -77,8 +78,9 @@ const ProductDetailsCard = ({setOpen, data}) => {
       data?.thumbnail,
     ];
     const imageSource = imageCandidates.map(resolveImageUrl).find(Boolean);
-    const shopAvatar = resolveImageUrl(data?.shop?.shop_avatar?.url || data?.shop?.shop_avatar);
+    const shopAvatar = resolveImageUrl(data?.shop?.avatar);
     const shopName = data?.shop?.name || 'Unknown shop';
+    const shopId = data?.shop?._id || '';
 
 
 
@@ -100,9 +102,9 @@ const ProductDetailsCard = ({setOpen, data}) => {
   };
 
 
-  //actually data.price is simply of products but we used the productcard for events also so we used the data.discountPrice for events and data.discount_price for products so we used the nullish coalescing operator to check which one is present and then we used that one
-  const displayPrice = data?.price ?? data?.discountPrice ?? data?.discount_price ?? 0;
-  //same for soldCount we used the data.total_sell for products and data.sold_out for events so we used the nullish coalescing operator to check which one is present and then we used that one
+  // Calculate prices based on backend schema: discountPrice is the active current price, originalPrice is the old price
+  const activePrice = data?.discountPrice ?? data?.price ?? data?.discount_price ?? 0;
+  const originalPrice = data?.originalPrice ?? data?.original_price;
   const soldCount = data?.total_sell ?? data?.sold_out ?? 0;
 
   return (
@@ -120,6 +122,7 @@ const ProductDetailsCard = ({setOpen, data}) => {
             <div className="block w-full 800px:flex">
               <div className="w-full 800px:w-[50%]">
                 <img src={imageSource || 'https://via.placeholder.com/300'} alt="" />
+                <Link to={`/shop/${shopId}`}>
                 <div className="flex">
                     <img
                       alt=""
@@ -137,6 +140,7 @@ const ProductDetailsCard = ({setOpen, data}) => {
                     </div>
 
                 </div>
+                </Link>
 
 
 {/* MESSAGE BUTTON */}
@@ -165,11 +169,13 @@ const ProductDetailsCard = ({setOpen, data}) => {
 
                 <div className="flex pt-3">
                   <h4 className={`${styles.productDiscountPrice}`}>
-                    {data.discount_price}$
+                    {activePrice}$
                   </h4>
-                  <h3 className={`${styles.price}`}>
-                    {displayPrice}$
-                  </h3>
+                  {originalPrice ? (
+                    <h3 className={`${styles.price}`}>
+                      {originalPrice}$
+                    </h3>
+                  ) : null}
                 </div>
 
 

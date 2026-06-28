@@ -5,6 +5,41 @@ import { Link } from 'react-router-dom';
 import styles from '../../Styles/styles';
 import { AiFillHeart, AiOutlineHeart, AiOutlineShoppingCart } from "react-icons/ai";  // ✅ added AiOutlineShoppingCart
 import { AiFillStar, AiOutlineStar, AiOutlineMessage } from "react-icons/ai";
+import { backend_url } from '../../server';
+
+const resolveImageUrl = (image) => {
+  if (!image) return null;
+
+  if (typeof image === 'string') {
+    if (image.startsWith('http://') || image.startsWith('https://') || image.startsWith('data:')) {
+      return image;
+    }
+
+    if (image.startsWith('/')) {
+      return `${backend_url}${image.replace(/^\//, '')}`;
+    }
+
+    return `${backend_url}uploads/${image}`;
+  }
+
+  if (typeof image === 'object') {
+    const objectUrl = image.url || image.src;
+
+    if (!objectUrl) return null;
+
+    if (objectUrl.startsWith('http://') || objectUrl.startsWith('https://') || objectUrl.startsWith('data:')) {
+      return objectUrl;
+    }
+
+    if (objectUrl.startsWith('/')) {
+      return `${backend_url}${objectUrl.replace(/^\//, '')}`;
+    }
+
+    return `${backend_url}uploads/${objectUrl}`;
+  }
+
+  return null;
+};
 
 
 const ProductDetail = ({ data }) => {
@@ -17,6 +52,34 @@ const ProductDetail = ({ data }) => {
   const incrementCount = () => setCount(count + 1);
   const decrementCount = () => { if (count > 1) setCount(count - 1); };
 
+  const images = [];
+  if (Array.isArray(data?.images)) {
+    data.images.forEach(img => {
+      const resolved = resolveImageUrl(img);
+      if (resolved) images.push(resolved);
+    });
+  }
+  if (Array.isArray(data?.image_Url)) {
+    data.image_Url.forEach(img => {
+      const resolved = resolveImageUrl(img);
+      if (resolved) images.push(resolved);
+    });
+  }
+  if (images.length === 0) {
+    if (data?.image_Url) {
+      const resolved = resolveImageUrl(data.image_Url);
+      if (resolved) images.push(resolved);
+    }
+    if (data?.image) {
+      const resolved = resolveImageUrl(data.image);
+      if (resolved) images.push(resolved);
+    }
+  }
+
+  const activePrice = data?.discountPrice ?? data?.price ?? data?.discount_price ?? 0;
+  const originalPrice = data?.originalPrice ?? data?.original_price;
+  const shopAvatar = resolveImageUrl(data?.shop?.avatar);
+
   return (
     <div className="bg-white">
       {data ? (
@@ -28,31 +91,25 @@ const ProductDetail = ({ data }) => {
                 {/* LEFT SIDE — images */}
                 <div className="w-full 800px:w-[50%]">
                   <img
-                    src={data.image_Url[select].url}
+                    src={images[select] || 'https://via.placeholder.com/400'}
                     alt=""
                     className="w-[80%] h-[400px] object-contain"
                   />
 
-                  <div className="flex">
-                    <div className="cursor-pointer">
-                      <img
-                        src={data.image_Url[0].url}
-                        alt=""
-                        className="h-[200px] overflow-hidden mr-3 mt-3 border"
-                        onClick={() => setSelect(0)}
-                      />
-                    </div>
-
-                    {data.image_Url[1].url && (
-                      <div className="cursor-pointer">
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {images.map((img, index) => (
+                      <div 
+                        key={index} 
+                        className={`cursor-pointer border ${select === index ? 'border-teal-500' : 'border-gray-300'}`}
+                        onClick={() => setSelect(index)}
+                      >
                         <img
-                          src={data.image_Url[1].url}
+                          src={img}
                           alt=""
-                          className="h-[200px] overflow-hidden mr-3 mt-3 border"
-                          onClick={() => setSelect(1)}
+                          className="h-[90px] w-[90px] object-cover mr-2 mt-2"
                         />
                       </div>
-                    )}
+                    ))}
                   </div>
                 </div>  {/* closes left side */}
 
@@ -63,11 +120,13 @@ const ProductDetail = ({ data }) => {
 
                   <div className="flex pt-3">
                     <h4 className={`${styles.productDiscountPrice}`}>
-                      {data.discount_price}$
+                      {activePrice}$
                     </h4>
-                    <h3 className={`${styles.price}`}>
-                      {data.price ? data.price + "$" : null}
-                    </h3>
+                    {originalPrice ? (
+                      <h3 className={`${styles.price}`}>
+                        {originalPrice}$
+                      </h3>
+                    ) : null}
                   </div>
 
                   {/* counter + wishlist */}
@@ -122,7 +181,7 @@ const ProductDetail = ({ data }) => {
                   <div className="flex items-center pt-8">
                     <Link to={`/shop/preview/${data?.shop._id}`}>
                       <img
-                        src={`${data?.shop?.shop_avatar?.url}`}
+                        src={shopAvatar || 'https://via.placeholder.com/50'}
                         alt=""
                         className="w-[50px] h-[50px] rounded-full mr-2"
                       />
@@ -173,6 +232,7 @@ const ProductDetail = ({ data }) => {
 
 const ProductDetailInfo= ({data})=>{
     const [active, setActive] = useState(1);
+    const infoShopAvatar = resolveImageUrl(data?.shop?.avatar);
 
     return (
 
@@ -278,7 +338,7 @@ const ProductDetailInfo= ({data})=>{
                     <div className="flex-shrink-0">
                         <div className="flex items-center">
                             <img
-                                src={`${data?.shop?.shop_avatar?.url}`}
+                                src={infoShopAvatar || 'https://via.placeholder.com/50'}
                                 className="w-[50px] h-[50px] rounded-full"
                                 alt=""
                             />
