@@ -92,6 +92,24 @@ router.get('/get-all-products-shop/:id', async(req, res) => {
 });
 
 
+// GET ALL PRODUCTS
+router.get('/get-all-products', async(req, res) => {
+    try {
+        const products = await Product.find().sort({ createdAt: -1 });
+        return res.status(200).json({
+            success: true,
+            products
+        });
+    } catch (err) {
+        return res.status(500).json({
+            success: false,
+            message: err.message
+        });
+    }
+});
+
+
+
 
 
 
