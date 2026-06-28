@@ -310,7 +310,7 @@ const ProductDetailInfo= ({data})=>{
             {/* PRODUCT DETAIL TAB MAIN JO PRODUCT HAI US KI INFORMATION DAAL DI BY data.description */}
             {active === 1 ? (
                     <>
-                    <p className="py-2 text-[18px] leading-8 pb-10 whitespace-pre-line">
+                    <p className="py-2 text-[18px] leading-8 pb-10 pt-5  whitespace-pre-line">
                         {data.description}
                     </p>
                     </>
@@ -355,12 +355,7 @@ const ProductDetailInfo= ({data})=>{
                     </div>
                     </Link>
 
-                    {/* right side — shop description starts right after left side ends */}
-                    <div className="flex-1">
-                        <p className="py-2 text-[18px] leading-8 pb-10 whitespace-pre-line">
-                            {data?.shop?.description  || 'No seller description available.'}
-                        </p>
-                    </div>
+                    
 
                 </div>
                 ) : null
