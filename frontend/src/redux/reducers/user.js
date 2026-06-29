@@ -47,19 +47,44 @@ export const userReducer = (state = initialState, action) => {
                 error: action.payload,
             };
 
+
+
+
+        // update user information
+        case "updateUserInfoRequest":
+            return {
+                ...state,
+                updateUserInfoLoading: true,
+            };
+
+        case "updateUserInfoSuccess":
+            return {
+                ...state,
+                updateUserInfoLoading: false,
+                user: action.payload,
+                success: true,
+            };
+
+        case "updateUserInfoFailed":
+            return {
+                ...state,
+                updateUserInfoLoading: false,
+                error: action.payload,
+            };
+
+
+
+
+            
+
         case "clearErrors":
             return {
                 ...state,
                 error: null,
+                success: false,
             };
 
         default:
             return state;
     }
 };
-
-
-
-
-
-

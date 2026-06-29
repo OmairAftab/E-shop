@@ -205,4 +205,60 @@ router.get("/logout", catchAsyncErrors(async (req, res, next) => {
 
 
 
+
+
+//update user information
+router.put("/update-user-info", isAuthenticated, async (req, res) => {
+   try {
+      const { email, password, phoneNumber, name } = req.body;
+
+      const user = await User.findById(req.user.id).select("+password");
+
+      if (!user) {
+        return res.status(404).json({
+          success: false,
+          message: "User not found",
+        });
+      }
+
+      const isPasswordValid = await user.comparePassword(password);
+
+      if (!isPasswordValid) {
+        return res.status(400).json({
+          success: false,
+          message: "Please provide the correct information",
+        });
+      }
+
+      // If email is being changed, make sure it is not already taken by another user
+      if (email && email !== user.email) {
+        const emailExists = await User.findOne({ email });
+        if (emailExists) {
+          return res.status(400).json({
+            success: false,
+            message: "Email is already in use by another account",
+          });
+        }
+      }
+
+      user.name = name;
+      user.email = email;
+      user.phoneNumber = phoneNumber;
+
+      await user.save();
+
+      res.status(201).json({
+        success: true,
+        user,
+      });
+    } catch (error) {
+      return res.status(500).json({
+        success: false,
+        message: error.message,
+      });
+    }
+  });
+
+
+
 module.exports = router

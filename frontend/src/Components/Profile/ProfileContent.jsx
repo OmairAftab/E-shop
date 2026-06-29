@@ -17,12 +17,14 @@ import { toast } from 'react-toastify';
 import { updatUserAddress, deleteUserAddress } from '../../redux/actions/user.js';
 import { RxCross1 } from 'react-icons/rx';
 import { AiOutlineDelete } from 'react-icons/ai';
+import { updateUserInformation } from '../../redux/actions/user.js';
+import { useEffect } from 'react';
 
 
 
 const ProfileContent = ({active}) => {
 
-  const {user} = useSelector((state) => state.user);
+  const {user, error, success} = useSelector((state) => state.user);
 
   console.log(user);
 
@@ -34,8 +36,38 @@ const ProfileContent = ({active}) => {
   const dispatch = useDispatch();
 
 
+
+  // Sync user data to local state when user changes or loads
+  useEffect(() => {
+    if (user) {
+      setName(user.name);
+      setEmail(user.email);
+      setPhoneNumber(user.phoneNumber);
+    }
+  }, [user]);
+
+
+
+
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+      dispatch({ type: "clearErrors" });
+    }
+    if (success) {
+      toast.success("Profile updated successfully!");
+      setPassword(""); // Clear password field after successful update
+      dispatch({ type: "clearErrors" });
+    }
+  }, [error, success, dispatch]);
+
+
+
+  
   const handleSubmit = (e) => {
     e.preventDefault();
+    dispatch(updateUserInformation(name, email, phoneNumber, password));
   }
 
 
