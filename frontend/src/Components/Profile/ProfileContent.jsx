@@ -19,6 +19,8 @@ import { RxCross1 } from 'react-icons/rx';
 import { AiOutlineDelete } from 'react-icons/ai';
 import { updateUserInformation } from '../../redux/actions/user.js';
 import { useEffect } from 'react';
+import {server} from '../../server.js';
+import axios from 'axios';
 
 
 
@@ -32,7 +34,7 @@ const ProfileContent = ({active}) => {
   const [email, setEmail] = useState(user && user.email);
   const [phoneNumber, setPhoneNumber] = useState(user && user.phoneNumber);
   const [password, setPassword] = useState("");
-  const [avatar, setAvatar] = useState();
+  const [avatar, setAvatar] = useState(null);
   const dispatch = useDispatch();
 
 
@@ -64,10 +66,40 @@ const ProfileContent = ({active}) => {
 
 
 
-  
+
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(updateUserInformation(name, email, phoneNumber, password));
+  }
+
+
+
+  const handleAvatarChange = async (e) => {
+    try{
+      const file=e.target.files[0];
+      setAvatar(file);
+
+      const formData=new FormData();
+
+      formData.append("image", file);
+
+      await axios.put(`${server}/user/update-avatar`, formData, {
+        headers: {
+        "Content-Type": "multipart/form-data",
+      },
+        withCredentials: true,
+      })
+      .then((res)=>{
+        toast.success("Avatar updated successfully!");
+        window.location.reload();
+      })
+      .catch(err=>{
+        toast.error(err.response.data.message);
+      })
+    }
+    catch(err){
+      toast.error(err.message);
+    }
   }
 
 
@@ -81,9 +113,12 @@ const ProfileContent = ({active}) => {
            <div className="flex justify-center w-full">
             <div className="relative">
               <img
-                src={
+                src={  
+// if the URL starts with "http" or "data:", use it directly; otherwise, prepend backend_url because it contains extra slash and then slice it off to avoid double slashes because baeckend_url = http:localhost:8000/ and user.avatar.url = /uploads/avatar.jpg, so we need to remove the leading slash from user.avatar.url to avoid double slashes in the final URL as `${backend_url}${user.avatar.url}` will become something like http://localhost:8000//uploads/avatar.jpg which is incorrect, so we use slice(1) to remove the leading slash from user.avatar.url to make it http://localhost:8000/uploads/avatar.jpg which is correct and will load the image properly.                 
                   user && user.avatar && user.avatar.url
-                    ? `${backend_url}${user.avatar.url}`
+                    ? (user.avatar.url.startsWith("http") || user.avatar.url.startsWith("data:")
+                        ? user.avatar.url                                               
+                        : `${backend_url}${user.avatar.url.startsWith("/") ? user.avatar.url.slice(1) : user.avatar.url}`) 
                     : 'https://static.vecteezy.com/system/resources/thumbnails/020/765/399/small/default-profile-account-unknown-icon-black-silhouette-free-vector.jpg'
                 }
                 onError={(e) => {
@@ -95,7 +130,18 @@ const ProfileContent = ({active}) => {
               />
 
               <div className="w-[30px] h-[30px] bg-[#E3E9EE] rounded-full flex items-center justify-center cursor-pointer absolute bottom-[5px] right-[5px]">
-                  <AiOutlineCamera/>
+                 
+                  <input
+                    type="file"
+                    className="hidden"
+                    id="avatar"
+                    accept="image/*"
+                    onChange={handleAvatarChange}
+                  />
+                  <label htmlFor="avatar">
+
+                    <AiOutlineCamera />
+                  </label>
               </div>
             </div>
           </div>

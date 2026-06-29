@@ -2,6 +2,7 @@ const express = require("express")
 const router = express.Router()
 const bcrypt = require('bcrypt')
 const path = require("path")
+const fs = require("fs")
 const { upload } = require("../multer")
 const User = require("../model/user")
 const ErrorHandler = require("../middleware/error.js")
@@ -11,7 +12,6 @@ const sendMail=require('../utils/sendMail')
 const sendToken=require ('../utils/jwtToken.js')
 const catchAsyncErrors = require("../middleware/catchAsyncErrors.js")
 const { isAuthenticated } = require("../middleware/auth.js")
-
 
 router.post("/create-user", upload.single("file"), async (req, res, next) => {
   try {
@@ -255,6 +255,58 @@ router.put("/update-user-info", isAuthenticated, async (req, res) => {
       return res.status(500).json({
         success: false,
         message: error.message,
+      });
+    }
+  });
+
+
+
+
+
+  //update user avatar
+  router.put("/update-avatar", isAuthenticated, upload.single("image"), async (req, res) => {
+    try {
+      const existingUser = await User.findById(req.user.id);
+
+      // path of the existing avatar in the uploads folder
+      if (existingUser && existingUser.avatar && existingUser.avatar.public_id) {
+        const existingAvatarPath = `uploads/${existingUser.avatar.public_id}`;
+        // delete the existing avatar from the uploads folder if it exists
+        if (fs.existsSync(existingAvatarPath)) {
+          fs.unlinkSync(existingAvatarPath);
+        }
+      }
+
+      if (!req.file) {
+        return res.status(400).json({
+          success: false,
+          message: "Please upload an image",
+        });
+      }
+
+      // path of the new avatar in the uploads folder      
+      const fileUrl = `/uploads/${req.file.filename}`;
+
+      // update the user avatar in the database
+      const user = await User.findByIdAndUpdate(
+        req.user.id,
+        {
+          avatar: {
+            public_id: req.file.filename,
+            url: fileUrl,
+          },
+        },
+        { new: true }
+      );
+
+      res.status(200).json({
+        success: true,
+        user,
+      });
+    } catch (err) {
+      return res.status(500).json({
+        success: false,
+        message: err.message,
       });
     }
   });
