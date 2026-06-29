@@ -71,6 +71,7 @@ const ProductCard = ({ data }) => {
   const addToWishlistHandler = async (data) => {
     setClick(!click);
     await dispatch(addToWishlist(data));
+    toast.success("Item added to wishlist successfully!");
   }
 
   // Function to handle removing an item from the wishlist
@@ -84,13 +85,12 @@ const ProductCard = ({ data }) => {
 
 // Jo jo products pehle hee wishlist main added hain to reload k baad b wo added rhen
   useEffect(() => {
-    if(wishlist && wishlist.find((i)=>i._id===data._id)){
-      setClick(true)
+    if (wishlist && data && wishlist.find((i) => i && i._id === data._id)) {
+      setClick(true);
+    } else {
+      setClick(false);
     }
-    else{
-      setClick(false)
-    }
-  }, [wishlist]);
+  }, [wishlist, data]);
 
 
 

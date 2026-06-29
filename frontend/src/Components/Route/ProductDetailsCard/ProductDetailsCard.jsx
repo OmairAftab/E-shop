@@ -79,13 +79,12 @@ const ProductDetailsCard = ({setOpen, data}) => {
     
     // Jo jo products pehle hee wishlist main added hain to reload k baad b wo added rhen
       useEffect(() => {
-        if(wishlist && wishlist.find((i)=>i._id===data._id)){
-          setClick(true)
+        if (wishlist && data && wishlist.find((i) => i && i._id === data._id)) {
+          setClick(true);
+        } else {
+          setClick(false);
         }
-        else{
-          setClick(false)
-        }
-      }, [wishlist]);
+      }, [wishlist, data]);
     
 
 

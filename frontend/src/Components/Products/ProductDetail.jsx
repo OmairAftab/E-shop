@@ -6,6 +6,11 @@ import styles from '../../Styles/styles';
 import { AiFillHeart, AiOutlineHeart, AiOutlineShoppingCart } from "react-icons/ai";  // ✅ added AiOutlineShoppingCart
 import { AiFillStar, AiOutlineStar, AiOutlineMessage } from "react-icons/ai";
 import { backend_url } from '../../server';
+import { useDispatch, useSelector } from 'react-redux';
+import { addToWishlist, removeFromWishlist } from '../../redux/actions/wishlist';
+import { toast } from 'react-toastify';
+import { useEffect } from 'react';
+import { addTocart } from '../../redux/actions/cart';
 
 const resolveImageUrl = (image) => {
   if (!image) return null;
@@ -44,13 +49,65 @@ const resolveImageUrl = (image) => {
 
 const ProductDetail = ({ data }) => {
 
-  const [count, setCount] = useState(1);
-  const [click, setClick] = useState(false);
+    const [click,setClick]=useState(false)
+    const [count,setCount]=useState(1)
+    const{wishlist} = useSelector((state)=>state.wishlist)
+    const {cart} = useSelector((state)=>state.cart)
+
+    const dispatch = useDispatch();
+
   const [select, setSelect] = useState(0);
   const navigate = useNavigate();
 
   const incrementCount = () => setCount(count + 1);
   const decrementCount = () => { if (count > 1) setCount(count - 1); };
+
+
+  
+  // Jo jo products pehle hee wishlist main added hain to reload k baad b wo added rhen
+    useEffect(() => {
+      if (wishlist && data && wishlist.find((i) => i && i._id === data._id)) {
+        setClick(true);
+      } else {
+        setClick(false);
+      }
+    }, [wishlist, data]);
+  
+
+     // Function to handle adding an item to the wishlist
+      const addToWishlistHandler = async (data) => {
+        setClick(!click);
+        await dispatch(addToWishlist(data));
+        toast.success("Item added to wishlist successfully!");
+      }
+    
+      // Function to handle removing an item from the wishlist
+      const removeFromWishlistHandler = async (data) => {
+        setClick(!click);
+        await dispatch(removeFromWishlist(data));
+      }
+    
+
+
+        //jab user Add to cart button pe click karega to ye function call hoga aur ye product ko cart me add karega
+            const AddToCartHandler = async (id) => {
+              const isItemExist= cart.find((i)=>i._id===id)  //ye check karega ki ye product already cart me hai ya nahi
+              if(isItemExist){
+                toast.error("Item Already in cart!")
+              }
+              else{
+                if(data.stock < count){
+                  toast.error("Product stock limited!")
+                }
+                else{
+                  const cartData = { ...data, qty: count };  //cartData me product data aur quantity store kar rahe hain
+                 await dispatch(addTocart(cartData));
+                  toast.success("Item added to cart successfully!");
+                }
+              }
+              console.log("Cart state right now:", JSON.parse(localStorage.getItem("cartItems")));
+            }
+        
 
 
   const images = [];
@@ -77,9 +134,12 @@ const ProductDetail = ({ data }) => {
     }
   }
 
+
   const activePrice = data?.discountPrice ?? data?.price ?? data?.discount_price ?? 0;
   const originalPrice = data?.originalPrice ?? data?.original_price;
   const shopAvatar = resolveImageUrl(data?.shop?.avatar);
+
+
 
   return (
     <div className="bg-white">
@@ -157,7 +217,7 @@ const ProductDetail = ({ data }) => {
                           className="cursor-pointer"
                           color="red"
                           title="Remove from wishlist"
-                          onClick={() => setClick(false)}
+                          onClick={async () => await removeFromWishlistHandler(data)}
                         />
                       ) : (
                         <AiOutlineHeart
@@ -165,14 +225,16 @@ const ProductDetail = ({ data }) => {
                           className="cursor-pointer"
                           color="#333"
                           title="Add to wishlist"
-                          onClick={() => setClick(true)}
+                          onClick={async () => await addToWishlistHandler(data)}
                         />
                       )}
                     </div>
                   </div>  {/* closes counter + wishlist */}
 
                   {/* add to cart button */}
-                  <div className={`${styles.button} !mt-6 !rounded !h-11 flex items-center`}>
+                  <div className={`${styles.button} !mt-6 !rounded !h-11 flex items-center`}
+                   onClick={() => AddToCartHandler(data._id)}
+                  >
                     <span className="text-white flex items-center">
                       Add to cart <AiOutlineShoppingCart className="ml-1" />
                     </span>

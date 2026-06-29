@@ -56,7 +56,14 @@ const Wishlist = ({setOpenWishlist}) => {
 
             {/* CART SINGLE ITEM */}
             <br />
-            <div className="w-full border-t">
+            { (wishlist && wishlist.length == 0) ? (
+              <div className="text-center w-full h-full flex flex-col items-center mt-[42%] justify-center font-bold">
+                Wishlist is empty!
+              </div>
+            ): 
+            
+            (
+              <div className="w-full border-t">
               {wishlist && wishlist.map((i,index)=>(
                  <CartSingle                               //HAR CART ITEM KE LIYE ALAG COMPONENT BANAYENGE
                   key={index}
@@ -64,6 +71,8 @@ const Wishlist = ({setOpenWishlist}) => {
                  />
               ))}
             </div>
+            )}
+            
 
            
         </div>
@@ -95,6 +104,7 @@ const CartSingle=({data})=>{
   const [value, setValue] = useState(data.qty || 1);
   const totalPrice = data.discountPrice * value;
   const {cart}= useSelector((state)=>state.cart)
+  const {wishlist}= useSelector((state)=>state.wishlist)
 
   const dispatch=useDispatch();
 
@@ -176,6 +186,8 @@ const resolveImageUrl = (image) => {
 
 
   return(
+
+
      <div className="border-b p-4">
       <div className="w-full flex items-center">
 
@@ -211,6 +223,7 @@ const resolveImageUrl = (image) => {
           onClick={()=> AddToCartHandler(data._id)}
         />
       </div>
+
 
       </div>
     </div>
