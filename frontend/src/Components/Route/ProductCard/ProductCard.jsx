@@ -11,6 +11,13 @@ import {
   AiOutlineStar,
 } from "react-icons/ai";
 import ProductDetailsCard from '../ProductDetailsCard/ProductDetailsCard';
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { addToWishlist, removeFromWishlist } from '../../../redux/actions/wishlist';
+import { toast } from 'react-toastify';
+import { useEffect } from 'react';
+import { addTocart } from '../../../redux/actions/cart';
+
 
 
 // THE DATA WHICH WE ARE DEALING WITH IN THIS 
@@ -25,6 +32,69 @@ const ProductCard = ({ data }) => {
 
   const [click, setClick] = useState(false);
   const [open, setOpen] = useState(false);
+  const dispatch = useDispatch();
+  const{wishlist} = useSelector((state)=>state.wishlist)
+  const {cart} = useSelector((state)=>state.cart)
+
+
+
+
+
+
+  //jab user Add to cart button pe click karega to ye function call hoga aur ye product ko cart me add karega
+      const AddToCartHandler = async (id) => {
+        const isItemExist= cart.find((i)=>i._id===id)  //ye check karega ki ye product already cart me hai ya nahi
+        if(isItemExist){
+          toast.error("Item Already in cart!")
+        }
+        else{
+          if(data.stock < 1){
+            toast.error("Product stock limited!")
+          }
+          else{
+            const cartData = { ...data, qty: 1 };  //cartData me product data aur quantity store kar rahe hain
+           await dispatch(addTocart(cartData));
+            toast.success("Item added to cart successfully!");
+          }
+        }
+        console.log("Cart state right now:", JSON.parse(localStorage.getItem("cartItems")));
+      }
+  
+
+
+
+
+
+
+
+  // Function to handle adding an item to the wishlist
+  const addToWishlistHandler = async (data) => {
+    setClick(!click);
+    await dispatch(addToWishlist(data));
+  }
+
+  // Function to handle removing an item from the wishlist
+  const removeFromWishlistHandler = async (data) => {
+    setClick(!click);
+    await dispatch(removeFromWishlist(data));
+  }
+
+
+
+
+// Jo jo products pehle hee wishlist main added hain to reload k baad b wo added rhen
+  useEffect(() => {
+    if(wishlist && wishlist.find((i)=>i._id===data._id)){
+      setClick(true)
+    }
+    else{
+      setClick(false)
+    }
+  }, [wishlist]);
+
+
+
+
 
   const resolveImageUrl = (image) => {
     if (!image) return null;
@@ -59,6 +129,8 @@ const ProductCard = ({ data }) => {
 
     return null;
   };
+
+
 
   const d = data?.name || '';
   const product_name = d.replace(/\s+/g, '-'); // replace spaces with '-'
@@ -176,7 +248,7 @@ const ProductCard = ({ data }) => {
               <AiFillHeart
               size={22}
               className="cursor-pointer absolute right-2 top-5"
-              onClick={()=>setClick(!click)}
+              onClick={async () => await removeFromWishlistHandler(data)}
               color={click ? "red" : "#333"}
               title='Remove from wishlist'
               />
@@ -185,7 +257,7 @@ const ProductCard = ({ data }) => {
               <AiOutlineHeart
               size={22}
               className="cursor-pointer absolute right-2 top-5" 
-              onClick={()=>setClick(!click)}
+              onClick={async () => await addToWishlistHandler(data)}
               title='Add to wishlist'
               />
 
@@ -204,6 +276,7 @@ const ProductCard = ({ data }) => {
             size={23}
             className="cursor-pointer absolute right-2 top-24"
             color="#444"
+            onClick={() => AddToCartHandler(data._id)}
             title="Add to cart"
           />
 
