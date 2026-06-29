@@ -105,6 +105,41 @@ const Cart = ({setOpenCart}) => {
 
 
 
+//THATS THE SAME WAY WE CORRECTED IMAGE ERROR IN PRODUCT DETAILS CARD COMPONENT, WE WILL DO THE SAME HERE TOO
+const resolveImageUrl = (image) => {
+  if (!image) return null;
+
+  if (typeof image === 'string') {
+    if (image.startsWith('http://') || image.startsWith('https://') || image.startsWith('data:')) {
+      return image;
+    }
+
+    if (image.startsWith('/')) {
+      return `${backend_url}${image.replace(/^\//, '')}`;
+    }
+
+    return `${backend_url}uploads/${image}`;
+  }
+
+  if (typeof image === 'object') {
+    const objectUrl = image.url || image.src;
+
+    if (!objectUrl) return null;
+
+    if (objectUrl.startsWith('http://') || objectUrl.startsWith('https://') || objectUrl.startsWith('data:')) {
+      return objectUrl;
+    }
+
+    if (objectUrl.startsWith('/')) {
+      return `${backend_url}${objectUrl.replace(/^\//, '')}`;
+    }
+
+    return `${backend_url}uploads/${objectUrl}`;
+  }
+
+  return null;
+};
+
 
 const CartSingle=({data})=>{
   const [value, setValue] = useState(data.qty || 1);
@@ -121,16 +156,33 @@ const CartSingle=({data})=>{
     const newQty = value + 1;
     setValue(newQty);
     dispatch(addTocart({ ...data, qty: newQty })); // Update the quantity in the cart of the redux store
-    }
+  }
 
     const decrement = (data) => {
       const newQty = value > 1 ? value - 1 : 1;
-    setValue(newQty);
-    dispatch(addTocart({ ...data, qty: newQty }));  // Update the quantity in the cart of the redux store
+      setValue(newQty);
+      dispatch(addTocart({ ...data, qty: newQty }));  // Update the quantity in the cart of the redux store
     }
 
 
-  
+
+
+
+//THATS THE SAME WAY WE CORRECTED IMAGE ERROR IN PRODUCT DETAILS CARD COMPONENT, WE WILL DO THE SAME HERE TOO
+  const imageCandidates = [
+    ...(Array.isArray(data?.images) ? data.images : []),
+    ...(Array.isArray(data?.image_Url) ? data.image_Url : []),
+    data?.image_Url,
+    data?.image,
+    data?.thumbnail,
+  ];
+  const imageSource = imageCandidates.map(resolveImageUrl).find(Boolean);
+  const imgSrc = imageSource || 'https://via.placeholder.com/300';
+
+
+
+
+
 
   return(
      <div className="border-b p-4">
@@ -160,7 +212,7 @@ const CartSingle=({data})=>{
 
 {/* ITEMS IN CART WITH THEIR NAME, PRICE*VALUE,  TOTALPRICE */}
         <img
-            src={`${backend_url}${data.images[0]}`}
+            src={imgSrc}
             alt={data.name}
           className="w-[130px] h-min ml-2 mr-2 rounded-[5px]"
         />
