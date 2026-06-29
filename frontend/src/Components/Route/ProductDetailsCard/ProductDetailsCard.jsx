@@ -9,6 +9,10 @@ import {
   AiOutlineShoppingCart,
 } from "react-icons/ai";
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import { useDispatch } from 'react-redux';
+import { addTocart } from '../../../redux/actions/cart';
 
 
 
@@ -22,10 +26,34 @@ const ProductDetailsCard = ({setOpen, data}) => {
     const [count,setCount]=useState(1)
     const [click, setClick] = useState(false);
     const [select, setSelect] = useState(false)
+    const {cart} =useSelector((state)=>state.cart)
+    const dispatch = useDispatch()
+
+
+
+    //jab user Add to cart button pe click karega to ye function call hoga aur ye product ko cart me add karega
+    const AddToCartHandler = async (id) => {
+      const isItemExist= cart.find((i)=>i._id===id)  //ye check karega ki ye product already cart me hai ya nahi
+      if(isItemExist){
+        toast.error("Item Already in cart!")
+      }
+      else{
+        if(data.stock < count){
+          toast.error("Product stock limited!")
+        }
+        else{
+          const cartData = { ...data, qty: count };  //cartData me product data aur quantity store kar rahe hain
+         await dispatch(addTocart(cartData));
+          toast.success("Item added to cart successfully!");
+        }
+      }
+      console.log("Cart state right now:", JSON.parse(localStorage.getItem("cartItems")));
+    }
+
+
+
 
     const handleMessageSubmit = () => {};
-
-
     
     const resolveImageUrl = (image) => {
       if (!image) return null;
@@ -228,7 +256,8 @@ const ProductDetailsCard = ({setOpen, data}) => {
                 
                 <div
                   className={`${styles.button} mt-6 rounded-[4px] h-11 flex items-center`}
-                >
+                  onClick={() => AddToCartHandler(data._id)}
+                  >
                   <span className="text-[#fff] flex items-center">
                     Add to cart <AiOutlineShoppingCart className="ml-1" />
                   </span>

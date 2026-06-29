@@ -17,11 +17,12 @@ import { backend_url } from "../../server";
 import Cart from '../Cart/cart';
 import RxCross1 from 'react-icons/rx';
 import Wishlist from '../Wishlist/wishlist';
+import { useDispatch } from 'react-redux';
 
 const Header = ({ activeHeading }) => {
   const { isAuthenticated, user, loading } = useSelector((state) => state.user);
   
-
+  const {cart} = useSelector((state)=>state.cart)
 
   const [searchTerm, setSearchTerm] = useState("");
   const [searchData, setSearchData] = useState([]);
@@ -276,7 +277,7 @@ const Header = ({ activeHeading }) => {
                   color="rgb(255 255 255 / 83%)"
                 />
                 <span className="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 top right p-0 m-0 text-white font-mono text-[12px] leading-tight text-center">
-                  1
+                  {cart && cart.length}
                 </span>
               </div>
             </div> {/* closes the cart icon div */}
