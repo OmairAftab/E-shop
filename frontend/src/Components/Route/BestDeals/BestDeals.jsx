@@ -14,8 +14,8 @@ const BestDeals = () => {
     useEffect(()=>{
         const dddata = allProducts && allProducts.length !== 0 ? allProducts : [];
         const sortedData = [...dddata].sort((a,b) => {
-            const aSold = a.sold_out ?? a.total_sell ?? 0;
-            const bSold = b.sold_out ?? b.total_sell ?? 0;
+            const aSold = a.sold_out ?? 0;              //a.sold_out ?? 0;  => if a.sold_out is not null or undefined, use its value; otherwise, use 0. This ensures that if the sold_out property is missing or null, it will be treated as 0 for sorting purposes.
+            const bSold = b.sold_out ?? 0;
             return bSold - aSold;
         });
         const firstFive = sortedData.slice(0,5);

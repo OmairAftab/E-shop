@@ -108,7 +108,7 @@ const CartSingle=({data})=>{
 
   return(
      <div className="border-b p-4">
-      <div className="w-full flex items-center">
+      <div className="w-full flex items-center justify-around">
 
         {/* NEECHE WALA DIV WILL BE RESPONSIBLE FOR QUANTITY CONTROLS */}
         <div> 
@@ -149,7 +149,7 @@ const CartSingle=({data})=>{
         </div>
 
         <RxCross1
-          className="cursor-pointer"
+          className="ml-5 cursor-pointer"
         />
 
 
