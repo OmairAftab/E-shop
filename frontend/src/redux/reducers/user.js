@@ -50,6 +50,9 @@ export const userReducer = (state = initialState, action) => {
 
 
 
+
+
+
         // update user information
         case "updateUserInfoRequest":
             return {
@@ -75,7 +78,34 @@ export const userReducer = (state = initialState, action) => {
 
 
 
-            
+
+
+
+        //update user address
+        case "updateUserAddressRequest":
+            return {
+                ...state,
+                updateUserAddressLoading: true,
+            };
+
+        case "updateUserAddressSuccess":
+            return {
+                ...state,
+                updateUserAddressLoading: false,
+                user: action.payload.user,
+                success: true,
+            };
+
+        case "updateUserAddressFailed":
+            return {
+                ...state,
+                updateUserAddressLoading: false,
+                error: action.payload,
+            };
+
+
+
+
 
         case "clearErrors":
             return {

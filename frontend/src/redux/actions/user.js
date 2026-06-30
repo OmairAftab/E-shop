@@ -53,6 +53,10 @@ export const logoutUser = () => async (dispatch) => {
 
 
 
+
+
+
+
 // update user address
 export const updatUserAddress =
   (country, city, address1, address2, zipCode, addressType) =>
@@ -78,9 +82,9 @@ export const updatUserAddress =
       dispatch({
         type: "updateUserAddressSuccess",
         payload: {
-          successMessage: "User address updated succesfully!",
-          user: data.user,
-        },
+          updateAddressSuccessMessage: "User address updated successfully!",
+          user: data.user
+        }
       });
     } catch (error) {
       dispatch({
@@ -89,6 +93,9 @@ export const updatUserAddress =
       });
     }
   };
+
+
+
 
 
 

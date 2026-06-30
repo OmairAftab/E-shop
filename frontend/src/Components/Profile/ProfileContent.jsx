@@ -816,7 +816,7 @@ const Address = () => {
         </div>
       </div>
       <br />
-      {user &&
+      {user && user.addresses &&
         user.addresses.map((item, index) => (
           <div
             className="w-full bg-white h-min 800px:h-[70px] rounded-[4px] flex items-center px-3 shadow justify-between pr-10 mb-5"

@@ -12,6 +12,7 @@ const sendMail=require('../utils/sendMail')
 const sendToken=require ('../utils/jwtToken.js')
 const catchAsyncErrors = require("../middleware/catchAsyncErrors.js")
 const { isAuthenticated } = require("../middleware/auth.js")
+const { error } = require("console")
 
 router.post("/create-user", upload.single("file"), async (req, res, next) => {
   try {
@@ -268,9 +269,9 @@ router.put("/update-user-info", isAuthenticated, async (req, res) => {
     try {
       const existingUser = await User.findById(req.user.id);
 
-      // path of the existing avatar in the uploads folder
+      
       if (existingUser && existingUser.avatar && existingUser.avatar.public_id) {
-        const existingAvatarPath = `uploads/${existingUser.avatar.public_id}`;
+        const existingAvatarPath = `uploads/${existingUser.avatar.public_id}`;      // path of the existing avatar in the uploads folder
         // delete the existing avatar from the uploads folder if it exists
         if (fs.existsSync(existingAvatarPath)) {
           fs.unlinkSync(existingAvatarPath);
@@ -310,6 +311,50 @@ router.put("/update-user-info", isAuthenticated, async (req, res) => {
       });
     }
   });
+
+
+
+
+
+
+
+//update user addresses
+router.put("/update-user-addresses", isAuthenticated, async(req,res)=>{
+  try{
+
+    const user=await User.findById(req.user.id);
+
+    const sameTypeAddress=user.addresses.find((address)=> address.addressType===req.body.addressType);
+
+// Check if an address of the same type already exists then update it, otherwise add the new address to the user's addresses list    
+    if(sameTypeAddress){
+      sameTypeAddress.country=req.body.country;
+      sameTypeAddress.city=req.body.city;
+      sameTypeAddress.address1=req.body.address1;
+      sameTypeAddress.address2=req.body.address2;
+      sameTypeAddress.zipCode=req.body.zipCode;
+    } else {
+      // If no address of this type exists, add it to the user's addresses list
+      user.addresses.push(req.body);
+    }
+    
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      user,
+    });
+
+  }
+  catch(err){
+    return res.status(500).json({
+      success:false,
+      message: err.message,
+    })
+  }
+})
+
+
 
 
 
