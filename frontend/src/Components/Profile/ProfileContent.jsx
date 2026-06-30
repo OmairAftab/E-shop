@@ -663,6 +663,7 @@ const Address = () => {
   const handleDelete = (item) => {
     const id = item._id;
     dispatch(deleteUserAddress(id));
+    toast.success("Address deleted successfully!");
   };
 
   return (

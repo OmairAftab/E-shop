@@ -358,4 +358,49 @@ router.put("/update-user-addresses", isAuthenticated, async(req,res)=>{
 
 
 
+
+
+
+//delete user address. Ye hum use krenge jahan addresses show hote in addresses sidebar of user profile .. jb delete icon pe click kre
+//yahan jo parameter id hai wo address ka id hoga jo hum delete krna chahte .. ye id hum frontend se bhejenge jb user delete icon pe click kre
+router.delete("/delete-user-address/:id", isAuthenticated, async (req, res) => {
+  try{
+
+    const user=await User.findById(req.user.id);
+
+
+
+
+    //we have to delete the address of the user so we will filter out the address with the given id mean remove the address with given id from user addresses array and update the user's addresses array
+
+    const updatedAddresses=user.addresses.filter((address)=> address._id != req.params.id);
+
+    user.addresses=updatedAddresses;
+
+    await user.save();
+
+    res.status(200).json({
+      success:true,
+      message:"Address deleted successfully",
+      user
+    })
+
+  }
+  catch(err){
+    return res.status(500).json({
+      success:false,
+      message: err.message
+    })
+  }
+
+})
+
+
+
+
+
+
+
+
+
 module.exports = router

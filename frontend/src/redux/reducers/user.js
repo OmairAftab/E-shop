@@ -107,6 +107,33 @@ export const userReducer = (state = initialState, action) => {
 
 
 
+
+
+
+
+        //delete user address
+        case "deleteUserAddressRequest":
+            return {
+                ...state,
+                deleteUserAddressLoading: true,
+            };
+
+        case "deleteUserAddressSuccess":
+            return {
+                ...state,
+                deleteUserAddressLoading: false,
+                user: action.payload.user,
+                success: true,
+            };
+
+        case "deleteUserAddressFailed":
+            return{
+                ...state,
+                deleteUserAddressLoading: false,
+                error: action.payload.message,
+            }
+        
+
         case "clearErrors":
             return {
                 ...state,
