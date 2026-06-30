@@ -402,5 +402,53 @@ router.delete("/delete-user-address/:id", isAuthenticated, async (req, res) => {
 
 
 
+//update user password.. YE HUM USE KR RHE USER PROFILE PAGE K SIDEBAR MAIN CHANGE PASSWORD TAB K LIYE
+router.put("/update-user-password", isAuthenticated, async(req,res)=>{
+  try{
+
+    const {oldPassword, newPassword, confirmPassword}=req.body;
+
+    const user=await User.findById(req.user.id).select("+password");
+
+    const comparePassword=await user.comparePassword(oldPassword);
+
+    if(!comparePassword){
+      return res.status(400).json({
+        success:false,
+        message:"Old password is incorrect"
+      })
+    }
+    
+    if(newPassword !== confirmPassword){
+      return res.status(400).json({
+        success:false,
+        message:"Passwords do not match"
+      })
+    }
+
+    user.password=newPassword;
+
+    await user.save();
+
+    res.status(200).json({
+      success:true,
+      message:"Password updated successfully",
+      user
+    })
+
+
+
+  }
+  catch(err){
+     return res.status(500).json({
+      success:false,
+      message: err.message
+    })
+  }
+})
+
+
+
+
 
 module.exports = router
