@@ -10,6 +10,7 @@ import ProfilePage from '../Pages/ProfilePage.jsx';
 import CreateShopPage from '../Pages/CreateShopPage.jsx';
 import ShopLoginPage from '../Pages/ShopLoginPage.jsx';
 import CheckoutPage from '../Pages/CheckoutPage.jsx';
+import PaymentPage from '../Pages/PaymentPage.jsx';
 
 export{
     LoginPage,
@@ -23,7 +24,8 @@ export{
     ProfilePage,
     CreateShopPage,
     ShopLoginPage,
-    CheckoutPage
+    CheckoutPage,
+    PaymentPage
 };
 
 

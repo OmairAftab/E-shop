@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { BrowserRouter,Route,Routes } from 'react-router-dom'
-import {LoginPage,SignUpPage, BestSellingPage, EventsPage, FAQpage, ProductsDetailPage, ShopLoginPage,  CreateShopPage, CheckoutPage} from "./routes/Routes.js"
+import {LoginPage,SignUpPage, BestSellingPage, EventsPage, FAQpage, ProductsDetailPage, ShopLoginPage,  CreateShopPage, CheckoutPage, PaymentPage} from "./routes/Routes.js"
 import { ShopCreateProduct, ShopAllProduct, ShopCreateEvents , ShopAllEvents, ShopAllCoupons} from './routes/ShopRoutes.js'
 import ShopDashboardPage from './Pages/Shop/ShopDashboardPage.jsx'
 import HomePage from "./Pages/HomePage.jsx"
@@ -63,6 +63,15 @@ const App = () => {
           element={
             <ProtectedRoute>
               <CheckoutPage />
+            </ProtectedRoute>
+          }
+        />
+
+      <Route
+          path="/payment"
+          element={
+            <ProtectedRoute>
+              <PaymentPage />
             </ProtectedRoute>
           }
         />

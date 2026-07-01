@@ -23,9 +23,11 @@ const Checkout = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    window.scrollTo(0, 0);
+    window.scrollTo(0, 0); //move to top of the page when component is mounted
   }, []);
 
+
+  
   const paymentSubmit = () => {
    if(address1 === "" || address2 === "" || zipCode === null || country === "" || city === ""){
       toast.error("Please choose your delivery address!")
@@ -54,29 +56,41 @@ const Checkout = () => {
    }
   };
 
+
+
+
+
+  //this is the subtotal price variable which is calculated by multiplying the quantity of each item in the cart by its discounted price and then summing up all the values.
   const subTotalPrice = cart.reduce(
     (acc, item) => acc + item.qty * item.discountPrice,
     0
   );
 
-  // this is shipping cost variable
-  const shipping = subTotalPrice * 0.1;
+  // this is shipping cost  (3% of the subtotal price)
+  const shipping = subTotalPrice * 0.03;
+
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const name = couponCode;
 
     await axios.get(`${server}/coupon/get-coupon-value/${name}`).then((res) => {
-      const shopId = res.data.couponCode?.shopId;
-      const couponCodeValue = res.data.couponCode?.value;
-      if (res.data.couponCode !== null) {
+      const shopId = res.data.couponCode?.shopId; //which specific shop this coupon belongs to
+      const couponCodeValue = res.data.couponCode?.value; // the discount percentage (e.g. 10 meaning 10% off).
+      
+      if (res.data.couponCode !== null) {  //if a coupon exists
+        
+//Check if the coupon is valid for items actually in the cart as  coupons are shop-specific
         const isCouponValid =
           cart && cart.filter((item) => item.shopId === shopId);
 
+//If no product in the cart has belong to that shop for which coupon code is valid
         if (isCouponValid.length === 0) {
           toast.error("Coupon code is not valid for this shop");
           setCouponCode("");
         } else {
+//This sums up the total price of only the eligible items (the ones from the matching shop)
           const eligiblePrice = isCouponValid.reduce(
             (acc, item) => acc + item.qty * item.discountPrice,
             0
@@ -94,13 +108,21 @@ const Checkout = () => {
     });
   };
 
-  const discountPercentenge = couponCodeData ? discountPrice : "";
 
+//if a valid coupon has been applied (couponCodeData exists), use the calculated discountPrice.
+  const discountAmount  = couponCodeData ? discountPrice : "";
+
+
+
+//This calculates the final checkout total:
+// If a coupon is applied: subtotal + shipping - discountAmount
+// If no coupon applied: just subtotal + shipping
   const totalPrice = couponCodeData
-    ? (subTotalPrice + shipping - discountPercentenge).toFixed(2)
+    ? (subTotalPrice + shipping - discountAmount ).toFixed(2)
     : (subTotalPrice + shipping).toFixed(2);
 
-  console.log(discountPercentenge);
+
+  console.log(discountAmount );
 
   return (
     <div className="w-full flex flex-col items-center py-8">
@@ -130,7 +152,7 @@ const Checkout = () => {
             subTotalPrice={subTotalPrice}
             couponCode={couponCode}
             setCouponCode={setCouponCode}
-            discountPercentenge={discountPercentenge}
+            discountAmount ={discountAmount }
           />
         </div>
       </div>
@@ -310,7 +332,7 @@ const CartData = ({
   subTotalPrice,
   couponCode,
   setCouponCode,
-  discountPercentenge,
+  discountAmount ,
 }) => {
   return (
     <div className="w-full bg-[#fff] rounded-md p-5 pb-8">
@@ -327,7 +349,7 @@ const CartData = ({
       <div className="flex justify-between border-b pb-3">
         <h3 className="text-[16px] font-[400] text-[#000000a4]">Discount:</h3>
         <h5 className="text-[18px] font-[600]">
-          - {discountPercentenge ? "$" + discountPercentenge.toString() : null}
+          - {discountAmount  ? "$" + discountAmount .toString() : null}
         </h5>
       </div>
       <h5 className="text-[18px] font-[600] text-end pt-3">${totalPrice}</h5>
