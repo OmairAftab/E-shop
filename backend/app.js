@@ -52,6 +52,11 @@ app.use("/event", event)
 const couponCode=require("./controller/couponCode.js")
 app.use("/coupon", couponCode)
 
+//import order routes
+const order=require("./controller/order.js")
+//mount routes
+app.use("/order", order)
+
 
 
 // for handling errors - use the error middleware
