@@ -116,4 +116,13 @@ export const getAllProducts = () => async (dispatch) => {
             payload: error.response?.data?.message || error.message,
         });
     }
-};
+};
+
+
+
+
+
+
+
+
+

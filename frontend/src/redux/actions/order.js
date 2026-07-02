@@ -29,3 +29,34 @@ catch(err){
 }
 
 }
+
+
+
+
+
+
+
+
+//get all orders of a shop
+export const getAllOrdersOfShop = (sellerId) => async (dispatch) => {
+try{
+
+    dispatch({
+        type: "getAllOrdersShopRequest"
+    })
+
+    const { data } = await axios.get(`${server}/order/get-all-orders/seller/${sellerId}`, { withCredentials: true });
+    
+    dispatch({
+        type:"getAllOrdersShopSuccess",
+        payload:data.orders
+    })
+}
+catch(err){
+    dispatch({
+        type:"getAllOrdersShopFailed",
+        payload:err.response.data.message
+    })
+}
+
+}

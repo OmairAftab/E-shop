@@ -74,4 +74,29 @@ router.get("/get-all-orders/user/:userId", async(req,res)=>{
   }
 })
 
+
+
+
+
+//get all orders of a seller
+router.get("/get-all-orders/seller/:sellerId", async(req,res)=>{
+  try{
+
+    const orders = await Order.find({ "cart.shopId": req.params.sellerId }).sort({
+      createdAt: -1,
+    });
+    res.status(200).json({
+      success: true,
+      orders
+    })
+    
+  }
+  catch(err){
+    res.status(500).json({
+      success:false,
+      message:err.message
+  })
+  }
+})
+
     module.exports = router;
