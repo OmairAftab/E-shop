@@ -29,7 +29,7 @@ const SuggestedProducts = ({ data }) => {
              {/* //agar koi same category ka product na ho toh show kro nahi toh no products found */}
             { products && products.length === 0 && (
                 <h5 className="w-full text-center py-5 text-[18px]">
-                    No products of same category found
+                    No Related Items Found
                 </h5>
              )}
 

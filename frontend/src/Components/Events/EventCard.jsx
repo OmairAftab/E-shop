@@ -3,8 +3,35 @@ import { Link } from 'react-router-dom'
 import styles from '../../Styles/styles'
 import CountDown from './CountDown'
 import { backend_url } from '../../server'
+import { useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
+import { addTocart } from '../../redux/actions/cart'
+import { toast } from 'react-toastify'
 
 const EventCard = ({ active, data }) => {
+
+  const dispatch = useDispatch();
+  const {cart} = useSelector((state)=>state.cart)
+
+   //jab user Add to cart button pe click karega to ye function call hoga aur ye product ko cart me add karega
+      const AddToCartHandler = async (id) => {
+        const isItemExist= cart.find((i)=>i._id===id)  //ye check karega ki ye product already cart me hai ya nahi
+        if(isItemExist){
+          toast.error("Item Already in cart!")
+        }
+        else{
+          if(data.stock < 1){
+            toast.error("Product stock limited!")
+          }
+          else{
+            const cartData = { ...data, qty: 1 };  //cartData me product data aur quantity store kar rahe hain
+           await dispatch(addTocart(cartData));
+            toast.success("Item added to cart successfully!");
+          }
+        }
+        console.log("Cart state right now:", JSON.parse(localStorage.getItem("cartItems")));
+      }
+  
 
   const resolveImageUrl = (image) => {
     if (!image) return null;
@@ -86,8 +113,8 @@ const EventCard = ({ active, data }) => {
           <Link to={`/product/${data?.name?.replace(/\s+/g, "-")}?isEvent=true`} className={`${styles.button} text-white !mt-0 !h-10 flex items-center justify-center !rounded`}>
             See Details
           </Link>
-          <div className={`${styles.button} text-white bg-black !mt-0 !h-10 flex items-center justify-center !rounded cursor-pointer`}>
-            Buy Now
+          <div className={`${styles.button} text-white bg-black !mt-0 !h-10 flex items-center justify-center !rounded cursor-pointer`} onClick={() => AddToCartHandler(data._id)}>
+            Add to Cart
           </div>
         </div>
       </div>
