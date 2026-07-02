@@ -47,4 +47,31 @@ router.post("/create-order",async(req,res)=>{
     }
 })
 
+
+
+
+
+
+
+//get all orders of a user
+router.get("/get-all-orders/user/:userId", async(req,res)=>{
+  try{
+
+    const orders = await Order.find({ "user._id": req.params.userId }).sort({
+      createdAt: -1,
+    });
+    res.status(200).json({
+      success: true,
+      orders
+    })
+    
+  }
+  catch(err){
+    res.status(500).json({
+      success:false,
+      message:err.message
+  })
+  }
+})
+
     module.exports = router;
