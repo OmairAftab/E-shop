@@ -2,7 +2,8 @@ import { createReducer } from "@reduxjs/toolkit";
 
 const initialState = {
     isLoading: true,
-    orders: [],
+    ShopOrders: [],     //this will manage all the orders of a single shop/seller
+    orders: [],         //this will manage all the orders of a single user
 }
 
 export const orderReducer = createReducer(initialState, (builder) => {
@@ -33,7 +34,7 @@ export const orderReducer = createReducer(initialState, (builder) => {
 
         .addCase("getAllOrdersShopSuccess",(state,action)=>{
             state.isLoading=false;
-            state.orders=action.payload;
+            state.ShopOrders=action.payload;
         })
 
         .addCase("getAllOrdersShopFailed",(state,action)=>{

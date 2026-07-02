@@ -14,7 +14,7 @@ import { AiOutlineArrowRight } from "react-icons/ai";
 
 const AllOrdersOfASingleShop = () => {
 
- const { orders=[], isLoading } = useSelector((state) => state.order);
+ const { ShopOrders=[], isLoading } = useSelector((state) => state.order);
   const { seller } = useSelector((state) => state.seller);
 
   const dispatch = useDispatch();
@@ -88,8 +88,8 @@ const AllOrdersOfASingleShop = () => {
 
   const row = [];
 
-   orders &&
-    orders.forEach((item) => {
+   ShopOrders &&
+    ShopOrders.forEach((item) => {
       row.push({
         id: item._id,
         itemsQty: item.cart.length,
