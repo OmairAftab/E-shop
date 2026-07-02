@@ -342,7 +342,7 @@ const AllOrders = () => {
       renderCell: (params) => {
         return (
           <>
-            <Link to={`/order/${params.id}`}>
+            <Link to={`/user/order/${params.id}`}>
               <button>
                 <AiOutlineArrowRight size={20} />
               </button>
