@@ -19,10 +19,12 @@ import RxCross1 from 'react-icons/rx';
 import Wishlist from '../Wishlist/wishlist';
 import { useDispatch } from 'react-redux';
 
+
 const Header = ({ activeHeading }) => {
   const { isAuthenticated, user, loading } = useSelector((state) => state.user);
   
   const {cart} = useSelector((state)=>state.cart)
+  const {isSeller}= useSelector((state)=>state.seller)
 
   const {wishlist} = useSelector((state)=>state.wishlist)
 
@@ -187,12 +189,21 @@ const Header = ({ activeHeading }) => {
 
 
      <div className={`${styles.button}`}>
-            <Link to="/create-shop">
+      {isSeller ? (
+        <Link to="/dashboard">
+          <h1 className='text-[#fff] flex items-center ' >
+             Dashboard <IoIosArrowForward className='ml-1 ' />
+          </h1>
+        </Link>
+      ) : (
+        <Link to="/create-shop">
             
               <h1 className='text-[#fff] flex items-center' >
                 Become Seller <IoIosArrowForward className='ml-1' />
               </h1>
             </Link>
+      )}
+            
 
      </div>
  {/* END OF UPAR WALA NAVBAr */}
