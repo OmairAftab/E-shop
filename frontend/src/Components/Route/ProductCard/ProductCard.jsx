@@ -17,6 +17,7 @@ import { addToWishlist, removeFromWishlist } from '../../../redux/actions/wishli
 import { toast } from 'react-toastify';
 import { useEffect } from 'react';
 import { addTocart } from '../../../redux/actions/cart';
+import Ratings from '../../Products/Ratings';
 
 
 
@@ -180,35 +181,7 @@ const ProductCard = ({ data }) => {
          </h4>
 
           <div className="flex">
-            <AiFillStar
-            className="mr-2 cursor-pointer"
-            color="#F6BA00"
-            size={20}
-            />
-
-            <AiFillStar
-            className="mr-2 cursor-pointer"
-            color="#F6BA00"
-            size={20}
-            />
-
-            <AiFillStar
-            className="mr-2 cursor-pointer"
-            color="#F6BA00"
-            size={20}
-            />
-
-            <AiFillStar
-            className="mr-2 cursor-pointer"
-            size={20}
-            color="#F6BA00"
-            />
-
-            <AiFillStar
-            className="mr-2 cursor-pointer"
-            size={20}
-            color="#F6BA00"
-            />
+            <Ratings rating={data?.ratings} />
 
           </div>
 
