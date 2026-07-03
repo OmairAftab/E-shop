@@ -7,6 +7,8 @@ const fs=require("fs")
 const { upload } = require("../multer");
 const Shop = require("../model/shop");
 const { isSeller } = require("../middleware/sellerauth");
+const { isAuthenticated } = require("../middleware/auth");
+const Order = require("../model/order");
 
 const deleteUploadedFile = async (fileName) => {
     if (!fileName) return;
@@ -144,5 +146,73 @@ router.delete('/delete-shop-product/:id',  isSeller, async(req, res) => {
         });
     }
 });
+
+
+
+
+
+// review for a product
+router.put(
+  "/create-new-review",
+    isAuthenticated,
+  async (req, res) => {
+    try {
+      const { user, rating, comment, productId, orderId } = req.body;
+            const reviewerId = req.user.id;
+
+      const product = await Product.findById(productId);
+
+      const review = {
+        user,
+        rating,
+        comment,
+        productId,
+      };
+
+      const isReviewed = product.reviews.find(
+            (rev) => rev.user && rev.user._id && rev.user._id.toString() === reviewerId
+        );
+
+        if (isReviewed) {
+            product.reviews.forEach((rev) => {
+                if (rev.user && rev.user._id && rev.user._id.toString() === reviewerId) {
+                    rev.rating = rating;
+                    rev.comment = comment;
+                    rev.user = user;
+                }
+            });
+        } else {
+            product.reviews.push(review);
+        }
+
+      let avg = 0;
+
+      product.reviews.forEach((rev) => {
+        avg += rev.rating;
+      });
+
+      product.ratings = avg / product.reviews.length;
+
+      await product.save({ validateBeforeSave: false });
+
+      await Order.findByIdAndUpdate(
+            orderId,
+            { $set: { "cart.$[elem].isReviewed": true } },
+            { arrayFilters: [{ "elem._id": productId }], new: true }
+        );
+
+      res.status(200).json({
+        success: true,
+        message: "Review created successfully!",
+      });
+        } catch (error) {
+            return res.status(400).json({
+                success: false,
+                message: error.message,
+            });
+        }
+  })
+;
+
 
 module.exports=router;

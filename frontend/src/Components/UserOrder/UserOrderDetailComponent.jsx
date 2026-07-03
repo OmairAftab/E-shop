@@ -46,11 +46,11 @@ const UserOrderDetailComponent = () => {
         toast.success(res.data.message);
         dispatch(getAllOrdersOfUser(user._id));
         setComment("");
-        setRating(null);
+        setRating(1);
         setOpen(false);
       })
       .catch((error) => {
-        toast.error(error);
+        toast.error(error?.response?.data?.message || error.message || "Failed to submit review");
       });
   };
   
@@ -101,7 +101,7 @@ const UserOrderDetailComponent = () => {
                 US${item.discountPrice} x {item.qty}
               </h5>
             </div>
-            {!item.isReviewed && data?.status === "Delivered" ?  <div
+            {!item.isReviewed && (data?.status === "Delivered" || data?.status === "succeeded") ?  <div
                 className={`${styles.button} text-[#fff]`}
                 onClick={() => setOpen(true) || setSelectedItem(item)}
               >
@@ -130,7 +130,7 @@ const UserOrderDetailComponent = () => {
             <br />
             <div className="w-full flex">
               <img
-                src={`${selectedItem?.images[0]?.url}`}
+                src={`${server}/${selectedItem?.images[0]?.url}`}
                 alt=""
                 className="w-[80px] h-[80px]"
               />
@@ -185,13 +185,13 @@ const UserOrderDetailComponent = () => {
                 rows="5"
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
-                placeholder="How was your product? write your expresion about it!"
+                placeholder="How was your product?"
                 className="mt-2 w-[95%] border p-2 outline-none"
               ></textarea>
             </div>
             <div
               className={`${styles.button} text-white text-[20px] ml-3`}
-              onClick={rating > 1 ? reviewHandler : null}
+              onClick={reviewHandler}
             >
               Submit
             </div>
