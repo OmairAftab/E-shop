@@ -13,6 +13,7 @@ import { useEffect } from 'react';
 import Ratings from '../Products/Ratings';
 import { addTocart } from '../../redux/actions/cart';
 
+//solving image not coming issue of product
 const resolveImageUrl = (image) => {
   if (!image) return null;
 
@@ -111,29 +112,14 @@ const ProductDetail = ({ data }) => {
         
 
 
-  const images = [];
-  if (Array.isArray(data?.images)) {
-    data.images.forEach(img => {
-      const resolved = resolveImageUrl(img);
-      if (resolved) images.push(resolved);
-    });
-  }
-  if (Array.isArray(data?.image_Url)) {
-    data.image_Url.forEach(img => {
-      const resolved = resolveImageUrl(img);
-      if (resolved) images.push(resolved);
-    });
-  }
-  if (images.length === 0) {
-    if (data?.image_Url) {
-      const resolved = resolveImageUrl(data.image_Url);
-      if (resolved) images.push(resolved);
-    }
-    if (data?.image) {
-      const resolved = resolveImageUrl(data.image);
-      if (resolved) images.push(resolved);
-    }
-  }
+  const imageCandidates = [
+    ...(Array.isArray(data?.images) ? data.images : []),
+    ...(Array.isArray(data?.image_Url) ? data.image_Url : []),
+    data?.image_Url,
+    data?.image,
+    data?.thumbnail,
+  ];
+  const images = imageCandidates.map(resolveImageUrl).filter(Boolean);
 
 
   const activePrice = data?.discountPrice ?? data?.price ?? data?.discount_price ?? 0;
@@ -388,11 +374,24 @@ const ProductDetailInfo= ({data})=>{
           {data &&
             data.reviews.map((item, index) => (
               <div className="w-full flex my-2">
+                
+
+
+                {/* //resolving image of the user that gave review */}
+                {(() => {
+                  const reviewerAvatar = resolveImageUrl(item.user?.avatar);
+
+                  return (
                 <img
-                  src={`${item.user.avatar?.url}`}
+                  src={reviewerAvatar || 'https://via.placeholder.com/50'}
                   alt=""
                   className="w-[50px] h-[50px] rounded-full"
                 />
+                  );
+                })()} 
+                {/* //until this is just for resolving image */}
+
+
                 <div className="pl-2 ">
                   <div className="w-full flex items-center">
                     <h1 className="font-[500] mr-3">{item.user.name}</h1>

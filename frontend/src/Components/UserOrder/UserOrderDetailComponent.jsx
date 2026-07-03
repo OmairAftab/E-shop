@@ -11,6 +11,41 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { AiFillStar, AiOutlineStar } from "react-icons/ai";
 import { RxCross1 } from "react-icons/rx";
+import { backend_url } from "../../server";
+
+const resolveImageUrl = (image) => {
+  if (!image) return null;
+
+  if (typeof image === 'string') {
+    if (image.startsWith('http://') || image.startsWith('https://') || image.startsWith('data:')) {
+      return image;
+    }
+
+    if (image.startsWith('/')) {
+      return `${backend_url}${image.replace(/^\//, '')}`;
+    }
+
+    return `${backend_url}uploads/${image}`;
+  }
+
+  if (typeof image === 'object') {
+    const objectUrl = image.url || image.src;
+
+    if (!objectUrl) return null;
+
+    if (objectUrl.startsWith('http://') || objectUrl.startsWith('https://') || objectUrl.startsWith('data:')) {
+      return objectUrl;
+    }
+
+    if (objectUrl.startsWith('/')) {
+      return `${backend_url}${objectUrl.replace(/^\//, '')}`;
+    }
+
+    return `${backend_url}uploads/${objectUrl}`;
+  }
+
+  return null;
+};
 
 const UserOrderDetailComponent = () => {
   const { orders } = useSelector((state) => state.order);
@@ -88,10 +123,14 @@ const UserOrderDetailComponent = () => {
       <br />
       {data &&
         data?.cart.map((item, index) => {
+          const productImage = resolveImageUrl(
+            item?.images?.[0] || item?.image_Url?.[0] || item?.image_Url || item?.image || item?.thumbnail
+          );
+
           return(
           <div className="w-full flex items-start mb-5">
             <img
-              src={`${item.images[0]?.url}`}
+              src={productImage || 'https://via.placeholder.com/80'}
               alt=""
               className="w-[80x] h-[80px]"
             />
@@ -130,7 +169,9 @@ const UserOrderDetailComponent = () => {
             <br />
             <div className="w-full flex">
               <img
-                src={`${server}/${selectedItem?.images[0]?.url}`}
+                src={resolveImageUrl(
+                  selectedItem?.images?.[0] || selectedItem?.image_Url?.[0] || selectedItem?.image_Url || selectedItem?.image || selectedItem?.thumbnail
+                ) || 'https://via.placeholder.com/80'}
                 alt=""
                 className="w-[80px] h-[80px]"
               />
