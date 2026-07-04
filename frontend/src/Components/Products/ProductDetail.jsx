@@ -55,7 +55,7 @@ const ProductDetail = ({ data }) => {
     const [count,setCount]=useState(1)
     const{wishlist} = useSelector((state)=>state.wishlist)
     const {cart} = useSelector((state)=>state.cart)
-
+  const products = useSelector((state) => state.products.products);  // Accessing the products from the Redux store
     const dispatch = useDispatch();
 
   const [select, setSelect] = useState(0);
@@ -128,6 +128,7 @@ const ProductDetail = ({ data }) => {
 
 
 
+ 
   return (
     <div className="bg-white">
       {data ? (
@@ -395,7 +396,7 @@ const ProductDetailInfo= ({data})=>{
                 <div className="pl-2 ">
                   <div className="w-full flex items-center">
                     <h1 className="font-[500] mr-3">{item.user.name}</h1>
-                    <Ratings rating={data?.ratings} />
+                    <Ratings rating={item.rating} />
                   </div>
                   <p>{item.comment}</p>
                 </div>
@@ -430,7 +431,7 @@ const ProductDetailInfo= ({data})=>{
                                     {data?.shop?.name}
                                 </h3>
                                 <h5 className="pb-2 text-[15px] flex items-center">
-                                    Rating: {data?.shop?.ratings} <AiFillStar color="#f6ba00" size={20} className="ml-1" />
+                                  Rating: {data?.shop?.ratings ?? 0} <AiFillStar color="#f6ba00" size={20} className="ml-1" />
                                 </h5>
                             </div>
                         </div>

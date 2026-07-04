@@ -165,4 +165,37 @@ router.put("/update-order-status/:orderId",isSeller, async(req,res)=>{
   }
 })
 
-    module.exports = router;
+
+//refund order for the user
+router.put("/refund-order/:orderId", async(req,res)=>{
+  try{
+
+    const order=await Order.findById(req.params.orderId);
+
+    if(!order){
+      return res.status(404).json({
+        success:false,
+        message:"Order not found"
+      })
+    }
+
+    order.status=req.body.status || order.status;
+
+    await order.save();
+
+    return res.status(200).json({
+      success: true,
+      order,
+      message:"Refund request sent to the seller"
+    });
+
+  }
+  catch(err){
+    res.status(500).json({
+      success:false,
+      message:err.message
+    })
+  }
+})
+
+module.exports = router;

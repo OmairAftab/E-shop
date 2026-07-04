@@ -90,7 +90,7 @@ const UserOrderDetailComponent = () => {
   };
   
   const refundHandler = async () => {
-    await axios.put(`${server}/order/order-refund/${id}`,{
+    await axios.put(`${server}/order/refund-order/${id}`,{
       status: "Processing refund"
     }).then((res) => {
        toast.success(res.data.message);
@@ -267,7 +267,7 @@ const UserOrderDetailComponent = () => {
           </h4>
           <br />
            {
-            data?.status === "Delivered" && (
+            data?.status === "succeeded" && (
               <div className={`${styles.button} text-white`}
               onClick={refundHandler}
               >Give a Refund</div>

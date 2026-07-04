@@ -399,27 +399,29 @@ const AllRefundOrders = () => {
 
 
    const { user } = useSelector((state) => state.user);
-  // const { orders } = useSelector((state) => state.order);
+  const { orders } = useSelector((state) => state.order);
   const dispatch = useDispatch();
 
-  // useEffect(() => {
-  //   dispatch(getAllOrdersOfUser(user._id));
-  // }, []);
+  useEffect(() => {
+    dispatch(getAllOrdersOfUser(user._id));
+  }, []);
+
+  const eligibleRefundOrders = orders.filter((order) => order.status === "Processing refund");
 
 
   //imagine we have orders in the backend and we are fetching them, but for now we will hardcode them to show how it works, we will replace this with actual orders from backend later on when we have the backend ready
-  const orders=[
-    {
-      _id: "123456789",
-      orderItems: [
-        {
-          name: "Iphone 11",
-        },
-      ],
-        totalPrice: 50000,
-        orderStatus: "Delivered",
-    },
-  ];
+  // const orders=[
+  //   {
+  //     _id: "123456789",
+  //     orderItems: [
+  //       {
+  //         name: "Iphone 11",
+  //       },
+  //     ],
+  //       totalPrice: 50000,
+  //       orderStatus: "Delivered",
+  //   },
+  // ];
 
   const columns = [
     { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
@@ -474,13 +476,13 @@ const AllRefundOrders = () => {
 
   const row = [];
 
-   orders &&
-    orders.forEach((item) => {
+   eligibleRefundOrders &&
+    eligibleRefundOrders.forEach((item) => {
       row.push({
         id: item._id,
-        itemsQty: item.orderItems.length,
+        itemsQty: item.cart.length?? 0,
         total: "US$ " + item.totalPrice,
-        status: item.orderStatus,
+        status: item.status,
       });
     });
 
