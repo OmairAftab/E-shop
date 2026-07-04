@@ -26,7 +26,7 @@ const AllRefundOrders = () => {
 
 
 
-    const refundOrders=ShopOrders && ShopOrders.filter((item)=> item.status==="Processing refund")
+    const refundOrders=ShopOrders && ShopOrders.filter((item)=> item.status==="Processing refund" || item.status==="Refund Success" || item.status==="Refund Successful" || item.status==="Refund Request Sent to Seller");
 
 
 
