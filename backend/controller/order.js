@@ -198,4 +198,65 @@ router.put("/refund-order/:orderId", async(req,res)=>{
   }
 })
 
+
+
+
+
+
+
+
+
+//accept the refund (this route is for the seller to accept the refund request)
+router.put("/order-refund-success/:orderId",isSeller, async(req,res)=>{
+  try{
+
+    const order =await Order.findById(req.params.orderId);
+  
+    if(!order){
+      return res.status(404).json({
+        success:false,
+        message:"Order not found"
+      })
+    }
+
+    order.status=req.body.status || order.status;
+
+
+    const refundSuccessful =
+      req.body.status === "Refund Success" ||
+      req.body.status === "Refund Successful";
+
+    if (refundSuccessful) {
+      await Promise.all(
+        order.cart.map(async (item) => {
+          const productId = item._id || item.id;
+          const product = await Product.findById(productId);      //find the product in the database using the item id from the order's cart
+
+          if (product) {
+            product.stock += item.qty;                      //increase the stock of the product by the quantity ordered because its returned now
+            product.sold_out -= item.qty;                   //decrease the sold_out count of the product by the quantity ordered because its returned now
+            await product.save({validateBeforeSave: false});                           //save the updated product back to the database
+          }
+        })
+      );
+    }
+
+    await order.save();
+
+    return res.status(200).json({
+      success: true,
+      order,
+      message:"Refund request accepted by the seller"
+    });
+
+  }
+  catch(err){
+    res.status(500).json({
+      success:false,
+      message:err.message
+    })
+  }
+
+})
+
 module.exports = router;
