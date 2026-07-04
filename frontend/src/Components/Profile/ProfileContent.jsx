@@ -508,23 +508,17 @@ const AllRefundOrders = () => {
 
 const TrackOrder = () => {
 
-    const orders=[
-    {
-      _id: "123456789",
-      orderItems: [
-        {
-          name: "Iphone 11",
-        },
-      ],
-        totalPrice: 50000,
-        orderStatus: "Delivered",
-    },
-  ];
+  const { user } = useSelector((state) => state.user);
+  const { orders } = useSelector((state) => state.order);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getAllOrdersOfUser(user._id));
+  }, []);
 
   const columns = [
     { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
-
-     {
+    {
       field: "status",
       headerName: "Status",
       minWidth: 130,
@@ -542,7 +536,6 @@ const TrackOrder = () => {
       minWidth: 130,
       flex: 0.7,
     },
-
     {
       field: "total",
       headerName: "Total",
@@ -550,7 +543,6 @@ const TrackOrder = () => {
       minWidth: 130,
       flex: 0.8,
     },
-
     {
       field: " ",
       flex: 1,
@@ -578,30 +570,26 @@ const TrackOrder = () => {
     orders.forEach((item) => {
       row.push({
         id: item._id,
-        itemsQty: item.cart.length,
+        itemsQty: item.cart?.length ?? 0,  // ✅ cart not orderItems
         total: "US$ " + item.totalPrice,
-        status: item.status,
+        status: item.status,               // ✅ status not orderStatus
       });
     });
 
   return (
-    <div> 
-
+    <div>
       <div className="pl-8 pt-1">
-      <DataGrid
-        rows={row}
-        columns={columns}
-        pageSize={10}
-        disableSelectionOnClick
-        autoHeight
-      />
+        <DataGrid
+          rows={row}
+          columns={columns}
+          pageSize={10}
+          disableSelectionOnClick
+          autoHeight
+        />
+      </div>
     </div>
-
-    </div>
-  )
-
-}
-
+  );
+};
 
 
 
