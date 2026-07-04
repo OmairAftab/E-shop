@@ -204,9 +204,97 @@ router.get("/get-shop-info/:id", async(req,res)=>{
 
 
 
+//controller for helping in updating the shop route in the shop settings page
+  // update shop avatar
+router.put("/update-shop-avatar", isSeller, upload.single("image"), async (req, res) => {
+    try {
+        // isSeller sets req.seller — use that, not req.user
+        const existingSeller = await Shop.findById(req.seller._id || req.seller.id);
+
+        if (!existingSeller) {
+            return res.status(404).json({
+                success: false,
+                message: "Shop not found",
+            });
+        }
+
+        // delete old avatar from uploads folder if it exists
+        if (existingSeller.avatar && existingSeller.avatar.public_id) {
+            const existingAvatarPath = `uploads/${existingSeller.avatar.public_id}`;
+            if (fs.existsSync(existingAvatarPath)) {
+                fs.unlinkSync(existingAvatarPath);
+            }
+        }
+
+        if (!req.file) {
+            return res.status(400).json({
+                success: false,
+                message: "Please upload an image",
+            });
+        }
+
+        const fileUrl = `/uploads/${req.file.filename}`;
+
+        // update the SHOP's avatar 
+        const updatedShop = await Shop.findByIdAndUpdate(
+            req.seller._id || req.seller.id,   // 
+            {
+                avatar: {
+                    public_id: req.file.filename,
+                    url: fileUrl,
+                },
+            },
+            { new: true }
+        );
+
+        res.status(200).json({
+            success: true,
+            shop: updatedShop,   // ✅ return shop, not user
+        });
+
+    } catch (err) {
+        return res.status(500).json({
+            success: false,
+            message: err.message,
+        });
+    }
+});
+
+
+// update shop info
+router.put("/update-shop-info", isSeller, async (req, res) => {
+    try {
+        const { name, description, address, phoneNumber, zipCode } = req.body;
+
+        // isSeller sets req.seller — use that, not req.shop
+        const shop = await Shop.findById(req.seller._id || req.seller.id);
+
+        if (!shop) {
+            return res.status(404).json({
+                success: false,
+                message: "Shop not found",
+            });
+        }
+
+        shop.name = name;
+        shop.description = description;
+        shop.address = address;
+        shop.phoneNumber = phoneNumber;
+        shop.zipCode = zipCode;
+
+        await shop.save();
+
+        res.status(200).json({   // ✅ 200 not 201 — this is an update, not a creation
+            success: true,
+            shop,
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: error.message,
+        });
+    }
+});
+
 module.exports = router;
-
-
-
-
-

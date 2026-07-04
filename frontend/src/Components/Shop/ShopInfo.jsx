@@ -14,6 +14,7 @@ import axios from 'axios'
 
 const ShopInfo = ({isOwner}) => {
     const { seller } = useSelector((state) => state.seller);
+    const { products } = useSelector((state) => state.products);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [data, setData] = useState({});
@@ -32,6 +33,12 @@ const ShopInfo = ({isOwner}) => {
             console.error("Error fetching shop info:", error);
         });
   }, [id]);
+
+
+  useEffect(() => {
+
+    dispatch(getAllProductsShop(seller?._id || data?._id));
+  },[])
 
   const shop = data?._id ? data : seller;
 
@@ -87,7 +94,7 @@ const ShopInfo = ({isOwner}) => {
 
         <div className="p-3">
           <h5 className="font-[600]">Total Products</h5>
-          <h4 className="text-[#000000a6]"> 10 </h4>
+          <h4 className="text-[#000000a6]"> {products?.length || 0} </h4>
         </div>
 
         <div className="p-3">

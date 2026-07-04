@@ -7,6 +7,7 @@ import ShopAllCoupons from '../Pages/Shop/ShopAllCoupons'
 import ShopAllOrders from '../Pages/Shop/ShopAllOrders'
 import ShopOrderDetails from '../Pages/Shop/ShopOrderDetails'
 import ShopAllRefunds from '../Pages/Shop/ShopAllRefunds'
+import ShopSettingsPage from '../Pages/Shop/ShopSettingsPage.jsx'
 
 export {
     ShopDashboardPage,
@@ -17,5 +18,6 @@ export {
     ShopAllCoupons,
     ShopAllOrders,
     ShopOrderDetails,
-    ShopAllRefunds
+    ShopAllRefunds,
+    ShopSettingsPage
 }

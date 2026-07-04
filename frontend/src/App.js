@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { BrowserRouter,Route,Routes } from 'react-router-dom'
 import {LoginPage,SignUpPage, BestSellingPage, EventsPage, FAQpage, ProductsDetailPage, ShopLoginPage,  CreateShopPage, CheckoutPage, PaymentPage, OrderSuccessPage, UserOrderDetailPage, TrackOrderPage} from "./routes/Routes.js"
-import { ShopCreateProduct, ShopAllProduct, ShopCreateEvents , ShopAllEvents, ShopAllCoupons, ShopAllOrders, ShopOrderDetails, ShopAllRefunds} from './routes/ShopRoutes.js'
+import { ShopCreateProduct, ShopAllProduct, ShopCreateEvents , ShopAllEvents, ShopAllCoupons, ShopAllOrders, ShopOrderDetails, ShopAllRefunds, ShopSettingsPage} from './routes/ShopRoutes.js'
 import ShopDashboardPage from './Pages/Shop/ShopDashboardPage.jsx'
 import HomePage from "./Pages/HomePage.jsx"
 import NotFound from "./Pages/NotFound.jsx"
@@ -171,6 +171,7 @@ const App = () => {
       />
 
 
+
       <Route
         path='/dashboard-events'
         element={
@@ -218,6 +219,15 @@ const App = () => {
             }
           />
 
+        <Route
+            path='/settings'
+            element={
+              <SellerAuthRoute>
+                <ShopSettingsPage />
+              </SellerAuthRoute>
+            }
+          />
+    
           
 
 
