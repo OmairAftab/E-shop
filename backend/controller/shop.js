@@ -3,6 +3,7 @@ const path = require("path");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
 const Shop = require("../model/shop");
+const Product = require("../model/product");
 const fs=require("fs")
 const { isAuthenticated} = require("../middleware/auth");
 const { upload } = require("../multer");
@@ -10,6 +11,28 @@ const ErrorHandler = require("../middleware/error.js")
 const catchAsyncErrors = require("../middleware/catchAsyncErrors.js");
 const sendShopToken = require("../utils/shoptoken.js");
 const { isSeller } = require("../middleware/sellerauth.js");
+
+const calculateShopRating = (products = []) => {
+  const reviewRatings = products.flatMap((product) =>
+    Array.isArray(product.reviews)
+      ? product.reviews.map((review) => Number(review.rating) || 0)
+      : []
+  );
+
+  if (!reviewRatings.length) {
+    return {
+      rating: 0,
+      reviewCount: 0,
+    };
+  }
+
+  const total = reviewRatings.reduce((sum, rating) => sum + rating, 0);
+
+  return {
+    rating: total / reviewRatings.length,
+    reviewCount: reviewRatings.length,
+  };
+};
 
 
 
@@ -186,9 +209,16 @@ router.get("/get-shop-info/:id", async(req,res)=>{
       });
     }
 
+    const products = await Product.find({ shopId: shop._id }).select("reviews");
+    const shopRating = calculateShopRating(products);
+    const shopData = shop.toObject();
+
+    shopData.ratings = shopRating.rating;
+    shopData.ratingCount = shopRating.reviewCount;
+
     res.status(200).json({
       success:true,
-      shop
+      shop: shopData
     });
 
   }

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { RxCross1 } from "react-icons/rx";
 import styles from '../../../Styles/styles';
-import { backend_url } from '../../../server';
+import { backend_url, server } from '../../../server';
 import {
   AiFillHeart,
   AiOutlineHeart,
@@ -17,6 +17,7 @@ import { addToWishlist, removeFromWishlist } from '../../../redux/actions/wishli
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
+import axios from 'axios';
 
 
 
@@ -30,6 +31,7 @@ const ProductDetailsCard = ({setOpen, data}) => {
     const [count,setCount]=useState(1)
     const [click, setClick] = useState(false);
     const [select, setSelect] = useState(false)
+  const [shopInfo, setShopInfo] = useState(null);
     const {cart} =useSelector((state)=>state.cart)
     const dispatch = useDispatch()
 
@@ -85,6 +87,24 @@ const ProductDetailsCard = ({setOpen, data}) => {
           setClick(false);
         }
       }, [wishlist, data]);
+
+      useEffect(() => {
+        const shopId = data?.shop?._id;
+
+        if (!shopId) {
+          setShopInfo(null);
+          return;
+        }
+
+        axios
+          .get(`${server}/shop/get-shop-info/${shopId}`, { withCredentials: true })
+          .then((res) => {
+            setShopInfo(res.data.shop);
+          })
+          .catch((error) => {
+            console.error("Error fetching shop info:", error);
+          });
+      }, [data?.shop?._id]);
     
 
 
@@ -144,9 +164,11 @@ const ProductDetailsCard = ({setOpen, data}) => {
       data?.thumbnail,
     ];
     const imageSource = imageCandidates.map(resolveImageUrl).find(Boolean);
-    const shopAvatar = resolveImageUrl(data?.shop?.avatar);
-    const shopName = data?.shop?.name || 'Unknown shop';
-    const shopId = data?.shop?._id || '';
+    const shop = shopInfo || data?.shop;
+    const shopAvatar = resolveImageUrl(shop?.avatar);
+    const shopName = shop?.name || 'Unknown shop';
+    const shopId = shop?._id || '';
+    const shopRating = shop?.ratings ?? 0;
 
 
 
@@ -202,7 +224,7 @@ const ProductDetailsCard = ({setOpen, data}) => {
                       <h3 className={`${styles.shop_name}`}>
                         {shopName}
                       </h3>
-                      <h5 className="pb-3 text-[15px]">({data?.shop.ratings}) Ratings</h5>
+                      <h5 className="pb-3 text-[15px]">({shopRating}) Ratings</h5>
                     </div>
 
                 </div>

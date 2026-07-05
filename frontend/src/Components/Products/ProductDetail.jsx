@@ -5,13 +5,14 @@ import { Link } from 'react-router-dom';
 import styles from '../../Styles/styles';
 import { AiFillHeart, AiOutlineHeart, AiOutlineShoppingCart } from "react-icons/ai";  // ✅ added AiOutlineShoppingCart
 import { AiFillStar, AiOutlineStar, AiOutlineMessage } from "react-icons/ai";
-import { backend_url } from '../../server';
+import { backend_url, server } from '../../server';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToWishlist, removeFromWishlist } from '../../redux/actions/wishlist';
 import { toast } from 'react-toastify';
 import { useEffect } from 'react';
 import Ratings from '../Products/Ratings';
 import { addTocart } from '../../redux/actions/cart';
+import axios from 'axios';
 
 //solving image not coming issue of product
 const resolveImageUrl = (image) => {
@@ -60,6 +61,7 @@ const ProductDetail = ({ data }) => {
 
   const [select, setSelect] = useState(0);
   const navigate = useNavigate();
+  const [shopInfo, setShopInfo] = useState(null);
 
   const incrementCount = () => setCount(count + 1);
   const decrementCount = () => { if (count > 1) setCount(count - 1); };
@@ -124,7 +126,27 @@ const ProductDetail = ({ data }) => {
 
   const activePrice = data?.discountPrice ?? data?.price ?? data?.discount_price ?? 0;
   const originalPrice = data?.originalPrice ?? data?.original_price;
-  const shopAvatar = resolveImageUrl(data?.shop?.avatar);
+  const shop = shopInfo || data?.shop;
+  const shopAvatar = resolveImageUrl(shop?.avatar);
+  const shopRating = shop?.ratings ?? 0;
+
+  useEffect(() => {
+    const shopId = data?.shop?._id;
+
+    if (!shopId) {
+      setShopInfo(null);
+      return;
+    }
+
+    axios
+      .get(`${server}/shop/get-shop-info/${shopId}`, { withCredentials: true })
+      .then((res) => {
+        setShopInfo(res.data.shop);
+      })
+      .catch((error) => {
+        console.error("Error fetching shop info:", error);
+      });
+  }, [data?.shop?._id]);
 
 
 
@@ -230,7 +252,7 @@ const ProductDetail = ({ data }) => {
 
                   {/* shop info */}
                   <div className="flex items-center pt-8">
-                    <Link to={`/shop/${data?.shop._id}`}>
+                    <Link to={`/shop/${shop?._id}`}>
                       <img
                         src={shopAvatar || 'https://via.placeholder.com/50'}
                         alt=""
@@ -238,13 +260,13 @@ const ProductDetail = ({ data }) => {
                       />
                     </Link>
                     <div className="pr-8">
-                      <Link to={`/shop/preview/${data?.shop._id}`}>
+                      <Link to={`/shop/preview/${shop?._id}`}>
                         <h3 className={`${styles.shop_name} pb-1 pt-1`}>
-                          {data.shop.name}
+                          {shop?.name}
                         </h3>
                       </Link>
                       <h5 className="pb-3 text-[15px] flex items-center">
-                         Rating: {data.shop.ratings} <AiFillStar color="#f6ba00" size={20} className="ml-1" />
+                         Rating: {shopRating} <AiFillStar color="#f6ba00" size={20} className="ml-1" />
                       </h5>
 
                     </div>
@@ -272,7 +294,7 @@ const ProductDetail = ({ data }) => {
 
         
             
-            <ProductDetailInfo data={data} />        {/*Component is made below.. its for Silver color section which has 3 parts.. */}
+            <ProductDetailInfo data={data} shop={shop} />        {/*Component is made below.. its for Silver color section which has 3 parts.. */}
 
         </>
       ) : null}
@@ -281,9 +303,10 @@ const ProductDetail = ({ data }) => {
 }
 
 
-const ProductDetailInfo= ({data})=>{
+const ProductDetailInfo= ({data, shop})=>{
     const [active, setActive] = useState(1);
-    const infoShopAvatar = resolveImageUrl(data?.shop?.avatar);
+  const infoShopAvatar = resolveImageUrl(shop?.avatar || data?.shop?.avatar);
+  const shopRating = shop?.ratings ?? 0;
 
     return (
 
@@ -428,10 +451,10 @@ const ProductDetailInfo= ({data})=>{
                             />
                             <div className="pl-3">
                                 <h3 className={`${styles.shop_name}`}>
-                                    {data?.shop?.name}
+                                    {shop?.name || data?.shop?.name}
                                 </h3>
                                 <h5 className="pb-2 text-[15px] flex items-center">
-                                  Rating: {data?.shop?.ratings ?? 0} <AiFillStar color="#f6ba00" size={20} className="ml-1" />
+                            Rating: {shopRating} <AiFillStar color="#f6ba00" size={20} className="ml-1" />
                                 </h5>
                             </div>
                         </div>
