@@ -61,6 +61,9 @@ app.use("/order", order)
 const conversation=require("./controller/conversation.js")
 app.use("/conversation", conversation)
 
+const message=require("./controller/message.js")
+app.use("/message", message)
+
 
 
 // for handling errors - use the error middleware
