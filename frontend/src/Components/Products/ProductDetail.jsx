@@ -56,6 +56,7 @@ const ProductDetail = ({ data }) => {
     const [count,setCount]=useState(1)
     const{wishlist} = useSelector((state)=>state.wishlist)
     const {cart} = useSelector((state)=>state.cart)
+    const {user, isAuthenticated} = useSelector((state)=>state.user)
   const products = useSelector((state) => state.products.products);  // Accessing the products from the Redux store
     const dispatch = useDispatch();
 
@@ -111,7 +112,31 @@ const ProductDetail = ({ data }) => {
               }
               console.log("Cart state right now:", JSON.parse(localStorage.getItem("cartItems")));
             }
-        
+
+
+
+        //handleMessageSubmit
+          const handleMessageSubmit = async () => {
+    if (isAuthenticated) {
+      const groupTitle = data._id + user._id;
+      const userId = user._id;
+      const sellerId = data.shop._id;
+      await axios
+        .post(`${server}/conversation/create-new-conversation`, {
+          groupTitle,
+          userId,
+          sellerId,
+        })
+        .then((res) => {
+          navigate(`/conversation?${res.data.conversation._id}`);
+        })
+        .catch((error) => {
+          toast.error(error.response.data.message);
+        });
+    } else {
+      toast.error("Please login to create a conversation");
+    }
+  };
 
 
   const imageCandidates = [
@@ -275,7 +300,7 @@ const ProductDetail = ({ data }) => {
                     {/* message button:  */}
                     <div
                     className={`${styles.button} bg-[#6443d1] mt-4 !rounded !h-11`}
-                    // onClick={handleMessageSubmit}
+                    onClick={handleMessageSubmit}
                   >
                     <span className="text-white flex items-center">
                       Send Message <AiOutlineMessage className="ml-1" />

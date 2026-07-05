@@ -57,6 +57,10 @@ const order=require("./controller/order.js")
 //mount routes
 app.use("/order", order)
 
+//import conversation routes
+const conversation=require("./controller/conversation.js")
+app.use("/conversation", conversation)
+
 
 
 // for handling errors - use the error middleware
