@@ -10,7 +10,17 @@ require("dotenv").config({
   path: "./.env",
 });
 
-app.use(cors());
+app.use(cors({
+    origin: [
+        "http://localhost:3000",
+        "https://e-shop-nu-jet.vercel.app",
+        "https://e-shop-dtqcx1n06-mohammad-omair-aftabs-projects.vercel.app",
+        "https://e-shop-git-master-mohammad-omair-aftabs-projects.vercel.app",
+    ],
+    methods: ["GET", "POST"],
+    credentials: true,
+}));
+
 app.use(express.json());
 
 app.get("/", (req, res) => {

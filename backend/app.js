@@ -8,8 +8,10 @@ const app = express();
 
 app.use(cors({
     origin: [
-        "http://localhost:3000",                    // local development
-        "https://your-frontend.vercel.app",         // ← replace with your actual Vercel URL after frontend deployment
+        "http://localhost:3000",
+        "https://e-shop-nu-jet.vercel.app",
+        "https://e-shop-dtqcx1n06-mohammad-omair-aftabs-projects.vercel.app",
+        "https://e-shop-git-master-mohammad-omair-aftabs-projects.vercel.app",
     ],
     credentials: true,
 }));
