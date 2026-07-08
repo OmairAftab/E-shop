@@ -1,72 +1,64 @@
-const express=require ("express");
-const errorMiddleware = require("./middleware/error")
-const cookieParser=require ("cookie-parser")
-const bodyParser=require ("body-parser")
-const cors = require("cors")  
+const express = require("express");
+const errorMiddleware = require("./middleware/error");
+const cookieParser = require("cookie-parser");
+const bodyParser = require("body-parser");
+const cors = require("cors");
 
-const app=express();
+const app = express();
 
 app.use(cors({
-    origin:"http://localhost:3000",
-    credentials:true
-}))
-app.use(express.json());                               // parses incoming JSON request bodies
-app.use(cookieParser());                               // parses cookies from request headers
-app.use(bodyParser.urlencoded({ extended: true }));    // parses form data (URL-encoded bodies)
+    origin: [
+        "http://localhost:3000",                    // local development
+        "https://your-frontend.vercel.app",         // ← replace with your actual Vercel URL after frontend deployment
+    ],
+    credentials: true,
+}));
 
-app.use("/uploads", express.static("uploads"))              // Serve uploaded files from /uploads instead of root
+app.use(express.json());
+app.use(cookieParser());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use("/uploads", express.static("uploads"));
 
-
-//config
-if (process.env.NODE_ENV !== "PRODUCTION") {          // only runs in development, not production
+// config — only load dotenv in development (Render injects env vars directly in production)
+if (process.env.NODE_ENV !== "production") {
     require("dotenv").config({
-        path: "backend/config/.env"                   // loads .env variables from this path
-    })
+        path: "backend/config/.env"
+    });
 }
 
+// user routes
+const user = require("./controller/user.js");
+app.use("/user", user);
 
-// import user routes
-const user=require("./controller/user.js")
-// mount routes
-app.use("/user", user)
+// shop routes
+const shop = require("./controller/shop.js");
+app.use("/shop", shop);
 
+// product routes
+const product = require("./controller/product.js");
+app.use("/product", product);
 
-// import shop routes
-const shop=require("./controller/shop.js")
-// mount routes
-app.use("/shop", shop)
+// event routes
+const event = require("./controller/event.js");
+app.use("/event", event);
 
+// coupon routes
+const couponCode = require("./controller/couponCode.js");
+app.use("/coupon", couponCode);
 
-//import product routes
-const product=require("./controller/product.js")
-    //mount routes
-app.use("/product", product)
+// order routes
+const order = require("./controller/order.js");
+app.use("/order", order);
 
+// conversation routes
+const conversation = require("./controller/conversation.js");
+app.use("/conversation", conversation);
 
-//import event routes
-const event=require("./controller/event.js")
-//mount routes
-app.use("/event", event)
+// message routes
+const message = require("./controller/message.js");
+app.use("/message", message);
 
+// error handling middleware
+app.use(errorMiddleware);
 
-const couponCode=require("./controller/couponCode.js")
-app.use("/coupon", couponCode)
-
-//import order routes
-const order=require("./controller/order.js")
-//mount routes
-app.use("/order", order)
-
-//import conversation routes
-const conversation=require("./controller/conversation.js")
-app.use("/conversation", conversation)
-
-const message=require("./controller/message.js")
-app.use("/message", message)
-
-
-
-// for handling errors - use the error middleware
-app.use(errorMiddleware)
-
-module.exports=app;   // exports app to be used in server.js
+module.exports = app;
