@@ -3,24 +3,20 @@ const path = require("path");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
 const Product = require("../model/product");
-const fs=require("fs")
 const { upload } = require("../multer");
+const cloudinary = require("../cloudinary");
 const Shop = require("../model/shop");
 const { isSeller } = require("../middleware/sellerauth");
 const { isAuthenticated } = require("../middleware/auth");
 const Order = require("../model/order");
 
-const deleteUploadedFile = async (fileName) => {
-    if (!fileName) return;
-
-    const filePath = path.join(__dirname, "..", "..", "uploads", fileName);
-
+// Delete image from Cloudinary using its public_id
+const deleteCloudinaryImage = async (public_id) => {
+    if (!public_id) return;
     try {
-        await fs.promises.unlink(filePath);
-    } catch (error) {
-        if (error.code !== "ENOENT") {
-            throw error;
-        }
+        await cloudinary.uploader.destroy(public_id);
+    } catch (err) {
+        console.error("Cloudinary delete error:", err.message);
     }
 };
 
@@ -40,18 +36,20 @@ router.post("/create-product", upload.array("images"), async(req, res) => {
         }
         else{
 
-            const files=req.files;
-            const images=files.map((file)=> `${file.filename}`)
+            const files = req.files || [];
 
-            const productData=req.body;
-            productData.images=images;
-            productData.shopId=shopId;
-            productData.shop=shop;
+            // Each file uploaded via Cloudinary has .path (secure_url) and .filename (public_id)
+            const images = files.map((file) => file.path);  // Cloudinary secure_url stored in file.path
 
-            const product=await Product.create(productData);
+            const productData = req.body;
+            productData.images = images;
+            productData.shopId = shopId;
+            productData.shop = shop;
+
+            const product = await Product.create(productData);
 
             return res.status(201).json({
-                success:true,
+                success: true,
                 product
             })
 
@@ -66,11 +64,6 @@ router.post("/create-product", upload.array("images"), async(req, res) => {
         })
     }
 })
-
-
-
-
-
 
 
 
@@ -111,16 +104,10 @@ router.get('/get-all-products', async(req, res) => {
 });
 
 
-
-
-
-
-
-
-// controller for deleting a product if a shop
-router.delete('/delete-shop-product/:id',  isSeller, async(req, res) => {
+// controller for deleting a product of a shop
+router.delete('/delete-shop-product/:id', isSeller, async(req, res) => {
     try{
-        const productId=req.params.id;
+        const productId = req.params.id;
         const product = await Product.findById(productId);
         if (!product) {
             return res.status(404).json({
@@ -129,8 +116,21 @@ router.delete('/delete-shop-product/:id',  isSeller, async(req, res) => {
             });
         }
 
+        // Delete all product images from Cloudinary
+        // Images are stored as full URLs — extract public_id from URL
         await Promise.all(
-            (product.images || []).map((image) => deleteUploadedFile(image))
+            (product.images || []).map((imageUrl) => {
+                // Extract public_id from Cloudinary URL
+                // e.g. https://res.cloudinary.com/xxx/image/upload/v123/eshop/abc.jpg → eshop/abc
+                if (typeof imageUrl === 'string' && imageUrl.includes('cloudinary')) {
+                    const parts = imageUrl.split('/');
+                    const filename = parts[parts.length - 1].split('.')[0];
+                    const folder = parts[parts.length - 2];
+                    const public_id = `${folder}/${filename}`;
+                    return deleteCloudinaryImage(public_id);
+                }
+                return Promise.resolve();
+            })
         );
 
         await Product.findByIdAndDelete(productId);
@@ -146,9 +146,6 @@ router.delete('/delete-shop-product/:id',  isSeller, async(req, res) => {
         });
     }
 });
-
-
-
 
 
 // review for a product

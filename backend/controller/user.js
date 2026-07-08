@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt')
 const path = require("path")
 const fs = require("fs")
 const { upload } = require("../multer")
+const cloudinary = require("../cloudinary")
 const User = require("../model/user")
 const ErrorHandler = require("../middleware/error.js")
 const { JsonWebTokenError } = require("jsonwebtoken")
@@ -28,16 +29,14 @@ router.post("/create-user", upload.single("file"), async (req, res, next) => {
       return next(new ErrorHandler("Please upload an avatar", 400))
     }
 
-    const filename = req.file.filename
-    const fileURL = `/uploads/${filename}`
-
+    // Cloudinary: file.filename = public_id, file.path = secure_url
     const newuser = {
       name: name,
       email: email,
       password: password,
       avatar: {
-        public_id: filename,
-        url: fileURL,
+        public_id: req.file.filename,
+        url: req.file.path,
       },
     }
 
@@ -269,13 +268,9 @@ router.put("/update-user-info", isAuthenticated, async (req, res) => {
     try {
       const existingUser = await User.findById(req.user.id);
 
-      
+      // Delete old avatar from Cloudinary if it exists
       if (existingUser && existingUser.avatar && existingUser.avatar.public_id) {
-        const existingAvatarPath = `uploads/${existingUser.avatar.public_id}`;      // path of the existing avatar in the uploads folder
-        // delete the existing avatar from the uploads folder if it exists
-        if (fs.existsSync(existingAvatarPath)) {
-          fs.unlinkSync(existingAvatarPath);
-        }
+        await cloudinary.uploader.destroy(existingUser.avatar.public_id);
       }
 
       if (!req.file) {
@@ -285,16 +280,13 @@ router.put("/update-user-info", isAuthenticated, async (req, res) => {
         });
       }
 
-      // path of the new avatar in the uploads folder      
-      const fileUrl = `/uploads/${req.file.filename}`;
-
-      // update the user avatar in the database
+      // Cloudinary: file.filename = public_id, file.path = secure_url
       const user = await User.findByIdAndUpdate(
         req.user.id,
         {
           avatar: {
             public_id: req.file.filename,
-            url: fileUrl,
+            url: req.file.path,
           },
         },
         { new: true }

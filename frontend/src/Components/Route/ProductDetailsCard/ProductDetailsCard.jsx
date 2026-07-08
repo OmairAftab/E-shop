@@ -224,7 +224,7 @@ const ProductDetailsCard = ({setOpen, data}) => {
                       <h3 className={`${styles.shop_name}`}>
                         {shopName}
                       </h3>
-                      <h5 className="pb-3 text-[15px]">({shopRating}) Ratings</h5>
+                      <h5 className="pb-3 text-[15px]">({Number(shopRating).toFixed(1)}) Ratings</h5>
                     </div>
 
                 </div>

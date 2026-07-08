@@ -12,9 +12,10 @@ router.post("/create-new-message", upload.array("images"), async (req, res) => {
         let images = [];
 
         if (req.files && req.files.length > 0) {
+            // Cloudinary: file.filename = public_id, file.path = secure_url
             images = req.files.map((file) => ({
                 public_id: file.filename,
-                url: `/uploads/${file.filename}`,
+                url: file.path,
             }));
         }
 

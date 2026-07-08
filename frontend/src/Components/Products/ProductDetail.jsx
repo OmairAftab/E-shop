@@ -291,7 +291,7 @@ const ProductDetail = ({ data }) => {
                         </h3>
                       </Link>
                       <h5 className="pb-3 text-[15px] flex items-center">
-                         Rating: {shopRating} <AiFillStar color="#f6ba00" size={20} className="ml-1" />
+                         Rating: {Number(shopRating).toFixed(1)} <AiFillStar color="#f6ba00" size={20} className="ml-1" />
                       </h5>
 
                     </div>
@@ -479,7 +479,7 @@ const ProductDetailInfo= ({data, shop})=>{
                                     {shop?.name || data?.shop?.name}
                                 </h3>
                                 <h5 className="pb-2 text-[15px] flex items-center">
-                            Rating: {shopRating} <AiFillStar color="#f6ba00" size={20} className="ml-1" />
+                            Rating: {Number(shopRating).toFixed(1)} <AiFillStar color="#f6ba00" size={20} className="ml-1" />
                                 </h5>
                             </div>
                         </div>

@@ -3,21 +3,16 @@ const Shop = require("../model/shop");
 const Event = require("../model/event");
 const router = express.Router();
 const { upload } = require("../multer");
+const cloudinary = require("../cloudinary");
 const { isSeller } = require("../middleware/sellerauth");
-const path = require("path");
-const fs = require("fs");
 
-const deleteUploadedFile = async (fileName) => {
-    if (!fileName) return;
-
-    const filePath = path.join(__dirname, "..", "..", "uploads", fileName);
-
+// Delete image from Cloudinary
+const deleteCloudinaryImage = async (public_id) => {
+    if (!public_id) return;
     try {
-        await fs.promises.unlink(filePath);
-    } catch (error) {
-        if (error.code !== "ENOENT") {
-            throw error;
-        }
+        await cloudinary.uploader.destroy(public_id);
+    } catch (err) {
+        console.error("Cloudinary delete error:", err.message);
     }
 };
 
@@ -46,20 +41,21 @@ router.post("/create-event", upload.array("images"), async(req, res) => {
                 });
             }
 
+            // Store Cloudinary URL (file.path) and public_id (file.filename) for each image
             const images = files.map((file) => ({
                 public_id: file.filename,
-                url: `/uploads/${file.filename}`,
+                url: file.path,
             }));
 
-            const eventData=req.body;
-            eventData.images=images;
-            eventData.shopId=shopId;
-            eventData.shop=shop;
+            const eventData = req.body;
+            eventData.images = images;
+            eventData.shopId = shopId;
+            eventData.shop = shop;
 
-            const event=await Event.create(eventData);
+            const event = await Event.create(eventData);
 
             return res.status(201).json({
-                success:true,
+                success: true,
                 event
             })
 
@@ -80,9 +76,8 @@ router.post("/create-event", upload.array("images"), async(req, res) => {
 //get all events of a shop
 router.get('/get-all-events/:id', async(req, res) => {
     try{
-        const shopId=req.params.id;
-        // Fetch all events with the given shopId mean all events of just that shop
-        const events=await Event.find({shopId:shopId}); 
+        const shopId = req.params.id;
+        const events = await Event.find({shopId: shopId}); 
         return res.status(200).json({
             success: true,
             events
@@ -98,9 +93,9 @@ router.get('/get-all-events/:id', async(req, res) => {
 
 
 
-router.delete('/delete-shop-event/:id',  isSeller, async(req, res) => {
+router.delete('/delete-shop-event/:id', isSeller, async(req, res) => {
     try{
-        const eventId=req.params.id;
+        const eventId = req.params.id;
         const event = await Event.findById(eventId);
         if (!event) {
             return res.status(404).json({
@@ -109,9 +104,10 @@ router.delete('/delete-shop-event/:id',  isSeller, async(req, res) => {
             });
         }
 
+        // Delete all event images from Cloudinary
         await Promise.all(
             (event.images || []).map((image) =>
-                deleteUploadedFile(image?.public_id || image?.url?.split("/").pop())
+                deleteCloudinaryImage(image?.public_id)
             )
         );
 
@@ -128,8 +124,6 @@ router.delete('/delete-shop-event/:id',  isSeller, async(req, res) => {
         });
     }
 });
-
-
 
 
 

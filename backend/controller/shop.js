@@ -7,6 +7,7 @@ const Product = require("../model/product");
 const fs=require("fs")
 const { isAuthenticated} = require("../middleware/auth");
 const { upload } = require("../multer");
+const cloudinary = require("../cloudinary");
 const ErrorHandler = require("../middleware/error.js")
 const catchAsyncErrors = require("../middleware/catchAsyncErrors.js");
 const sendShopToken = require("../utils/shoptoken.js");
@@ -43,12 +44,9 @@ router.post("/create-shop", upload.single("file"), async (req, res) => {
         const sellerEmail = await Shop.findOne({ email });
 
         if (sellerEmail) {
-            // clean up the uploaded file since signup is rejected
+            // clean up the uploaded Cloudinary image since signup is rejected
             if (req.file) {
-                const filePath = `uploads/${req.file.filename}`;
-                fs.unlink(filePath, (err) => {
-                    if (err) console.log(err);
-                });
+                await cloudinary.uploader.destroy(req.file.filename);
             }
             return res.status(400).json({
                 success: false,
@@ -63,16 +61,14 @@ router.post("/create-shop", upload.single("file"), async (req, res) => {
             });
         }
 
-        const filename = req.file.filename;
-        const fileURL = `/uploads/${filename}`;
-
+        // Cloudinary: file.filename = public_id, file.path = secure_url
         const newSeller = {
             name: req.body.name,
             email: email,
             password: req.body.password,
             avatar: {
-                public_id: filename,
-                url: fileURL,
+                public_id: req.file.filename,
+                url: req.file.path,
             },
             address: req.body.address,
             phoneNumber: req.body.phoneNumber,
@@ -248,12 +244,9 @@ router.put("/update-shop-avatar", isSeller, upload.single("image"), async (req, 
             });
         }
 
-        // delete old avatar from uploads folder if it exists
+        // Delete old avatar from Cloudinary if it exists
         if (existingSeller.avatar && existingSeller.avatar.public_id) {
-            const existingAvatarPath = `uploads/${existingSeller.avatar.public_id}`;
-            if (fs.existsSync(existingAvatarPath)) {
-                fs.unlinkSync(existingAvatarPath);
-            }
+            await cloudinary.uploader.destroy(existingSeller.avatar.public_id);
         }
 
         if (!req.file) {
@@ -263,15 +256,13 @@ router.put("/update-shop-avatar", isSeller, upload.single("image"), async (req, 
             });
         }
 
-        const fileUrl = `/uploads/${req.file.filename}`;
-
-        // update the SHOP's avatar 
+        // Cloudinary: file.filename = public_id, file.path = secure_url
         const updatedShop = await Shop.findByIdAndUpdate(
-            req.seller._id || req.seller.id,   // 
+            req.seller._id || req.seller.id,
             {
                 avatar: {
                     public_id: req.file.filename,
-                    url: fileUrl,
+                    url: req.file.path,
                 },
             },
             { new: true }
