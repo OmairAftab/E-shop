@@ -58,6 +58,11 @@ app.use("/conversation", conversation);
 const message = require("./controller/message.js");
 app.use("/message", message);
 
+// root route — confirms backend is running
+app.get("/", (req, res) => {
+    res.send("E-shop backend is running!");
+});
+
 // error handling middleware
 app.use(errorMiddleware);
 
