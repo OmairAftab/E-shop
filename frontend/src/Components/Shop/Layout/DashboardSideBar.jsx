@@ -163,7 +163,7 @@ const DashboardSideBar = ({ active }) => {
 
 
 
-        <div className="w-full flex items-center p-4">
+        {/* <div className="w-full flex items-center p-4">
         <Link
           to="/dashboard-withdraw-money"
           className="w-full flex items-center"
@@ -180,7 +180,7 @@ const DashboardSideBar = ({ active }) => {
             Withdraw Money
           </h5>
         </Link>
-      </div>
+      </div> */}
 
 
 
