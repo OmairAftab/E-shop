@@ -8,18 +8,18 @@ E-Shop is a state-of-the-art, production-ready, full-stack multi-vendor e-commer
 
 ### 👤 Buyer / Customer Experience
 - **Interactive Home Page:** Promoted product sliders, featured categories, best-selling showcases, and active promotional events.
-- **Advanced Filtering & Details:** Filter products by category and sort by price/reviews. View rich product description pages with customer reviews.
+- **Advanced Filtering & Details:** Filter products by category. View rich product description pages with customer reviews.
 - **Cart & Wishlist Systems:** Fully managed via Redux Toolkit with automated `localStorage` persistence across sessions.
-- **Secure Checkout & Order Management:** Multistep checkout flow (Shipping Details, Order Confirmation, and Payment). Order tracking console showing real-time delivery status updates.
+- **Secure Checkout & Order Management:** Multistep checkout flow (Shipping Details, Order Confirmation, etc). Order tracking console showing real-time delivery status updates.
 - **Product Reviews:** Write and edit reviews with star ratings and comments after receiving orders.
-- **Real-Time Customer Support:** Chat directly with shop owners/sellers with live typing indicators and seen/unseen status notifications.
+- **Real-Time Customer Support:** Chat directly with shop owners/sellers.
 
 ### 🏢 Seller / Merchant Portal
-- **Shop Onboarding & Management:** Dedicated registration for sellers with customizable shop names, profile banners, avatars, and descriptions.
-- **Seller Dashboard:** Interactive panel detailing sales analytics, total orders, product lists, and customer messages.
+- **Shop Onboarding & Management:** Dedicated registration for sellers with customizable shop names, avatars, and descriptions.
+- **Seller Dashboard:** Interactive panel detailing analytics.
 - **Rich Product Manager:** Multi-image uploads via Cloudinary & Multer with price, discount, inventory, and category tracking.
 - **Promotional Events:** Create time-bound promotional events with special pricing tiers.
-- **Discount Coupon System:** Generate custom coupon codes (percentage or flat discounts) with eligibility criteria.
+- **Discount Coupon System:** Generate custom coupon codes with eligibility criteria.
 - **Order Fulfillment Pipeline:** Detailed order lists with status transitions (e.g., *Processing*, *Shipped*, *Delivered*, *Refunded*).
 - **Settings Panel:** Update shop metadata, change password, and manage shop avatars dynamically.
 
